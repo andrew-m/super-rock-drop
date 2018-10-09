@@ -4,7 +4,8 @@
   "description": "A Super Foul Eggs clone and Electron learning exercise",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "mocha"
   },
   "repository": "",
   "keywords": [
@@ -14,6 +15,8 @@
   "author": "Andrew Maddison",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^3.0.0"
+    "chai": "^4.1.2",
+    "electron": "^3.0.0",
+    "mocha": "^5.2.0"
   }
 }
