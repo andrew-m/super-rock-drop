@@ -13,9 +13,13 @@
 
     <script>
       // You can also require other files to run in this process
-      require('./renderer.js');
-      blah();
-      console.log("njnjknk")
+      let render = require('./renderer.js');
+
+      document.addEventListener('DOMContentLoaded',pageLoaded);
+
+      function pageLoaded(){
+        render.blah(document);
+      }
     </script>
 
     <canvas width="300" height="600" id="canvas"></canvas>
