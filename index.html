@@ -13,12 +13,13 @@
 
     <script>
       // You can also require other files to run in this process
-      let render = require('./renderer.js');
+//      import { setup } from './renderer.js'; // don't know why this syntax doesn't work.
+      let setup = require('./renderer.js').setup;
 
       document.addEventListener('DOMContentLoaded',pageLoaded);
 
       function pageLoaded(){
-        render.blah(document);
+        setup(document);
       }
     </script>
 

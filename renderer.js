@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const blah = function (doc) {
+const setup = function (doc) {
     if (doc === null || doc === undefined) {
         console.log("doc is null :(");
         return;
@@ -43,5 +43,5 @@ const blah = function (doc) {
 }
 
 module.exports = {
-    blah
+    setup
 }
