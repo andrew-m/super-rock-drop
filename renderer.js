@@ -7,6 +7,7 @@ const setup = function (doc) {
         console.log("doc is null :(");
         return;
     }
+
     var canvas = doc.getElementById("canvas");
     width = canvas.width;
     height = canvas.height;
