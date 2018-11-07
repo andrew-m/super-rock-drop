@@ -2,45 +2,19 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
+const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
+
+
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
         console.log("doc is null :(");
         return;
     }
 
-    var canvas = doc.getElementById("canvas");
-    width = canvas.width;
-    height = canvas.height;
-    sizeOfGridSquareX = width / 6;
-    sizeOfGridSquareY = height / 12; //ToDo: un hard code these.
-    ctx = canvas.getContext("2d");
-    console.log("Hellow");
+    let canvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
 
-    ctx.fillStyle = "#ffffff";
-
-    // var centerX = (entity.gameGridPosition.x * sizeOfGridSquareX) - (sizeOfGridSquareX / 2);
-    // var centery = (entity.gameGridPosition.y * sizeOfGridSquareY) - (sizeOfGridSquareY / 2);
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    ctx.fillStyle = "red";
-
-    // var centerX = (entity.gameGridPosition.x * sizeOfGridSquareX) - (sizeOfGridSquareX / 2);
-    // var centery = (entity.gameGridPosition.y * sizeOfGridSquareY) - (sizeOfGridSquareY / 2);
-
-    ctx.fillRect(
-        50,
-        50,
-        20,
-        20
-    );
-
-
+    canvasGameRenderer.Setup();
+    canvasGameRenderer.JustDrawADamnRedSquare();
 }
 
 module.exports = {

@@ -7,7 +7,20 @@ class CanvasGameRenderer {
         this.clearWholeGameArea();
     }
     clearWholeGameArea() {
+        this.context.fillStyle = "#ffffff";
         this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
+    }
+
+    JustDrawADamnRedSquare() {
+        this.context.fillStyle = "red";
+
+        this.context.fillRect(
+            50,
+            50,
+            20,
+            20
+        );
+
     }
 }
 
