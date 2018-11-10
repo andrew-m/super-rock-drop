@@ -38,8 +38,6 @@ class CanvasGameRenderer {
             height: 50
         }
     }
-
-
 }
 
 module.exports = { CanvasGameRenderer }
