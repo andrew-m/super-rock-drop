@@ -12,12 +12,11 @@ const setup = function (doc) {
 
     canvasGameRenderer.Setup();
 
-    let gameState = {
-        entities: [
+    let gameState = new GameState([
             new Entity(1, 1, '#ff0000'),
             new Entity(6, 12, '#00ff00'),
             new Entity(3, 6, '#0000ff')]
-    }
+    )
     canvasGameRenderer.RenderGameState(gameState)
     loop();
 }

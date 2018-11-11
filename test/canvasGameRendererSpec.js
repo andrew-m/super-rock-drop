@@ -32,29 +32,6 @@ describe('Game Renderer for HTML canvas', function() {
         expect(shouldReallyUseAProperMockingFramework.endY).to.equal(948)
     })
 
-    it.skip('Should render all the game objects and their correct colours', function(){
-        let stubContext = {
-            fillRect: function(startX, startY, endX, endY){
-                shouldReallyUseAProperMockingFramework.startX = startX;
-                shouldReallyUseAProperMockingFramework.startY = startY;
-                shouldReallyUseAProperMockingFramework.endX = endX;
-                shouldReallyUseAProperMockingFramework.endY = endY;
-            }
-        }
-
-        let stubCanvas = {
-            getContext : function (arg){if (arg === "2d"){return stubContext}},
-            width: 123,
-            height: 948 //not real values
-        }
-
-        let renderer = new CanvasGameRenderer(stubCanvas)
-
-        let gameState = {
-            entities: [new Entity(1, 1, '#ff0000')]
-        }
-        renderer.RenderGameState()
-    })
 
     it('Should calculate canvas position when element is in top left corner', function (){
         let canvasWidth = 300;

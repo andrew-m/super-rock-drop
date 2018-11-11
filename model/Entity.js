@@ -1,6 +1,3 @@
-/**
- * Created by amaddison on 08/11/18.
- */
 class Entity {
     constructor (x, y, colour) {
         this.x = x
@@ -10,3 +7,6 @@ class Entity {
 }
 
 module.exports = { Entity }
+
+//todo Investigate the /instanceOf operator
+// if (z instanceof Entity) {}

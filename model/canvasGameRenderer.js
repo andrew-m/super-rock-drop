@@ -1,5 +1,4 @@
-var gameModel = require('../model/gameModel');
-
+var gameModel = require('./constants');
 
 class CanvasGameRenderer {
     constructor (canvas) {
@@ -20,7 +19,7 @@ class CanvasGameRenderer {
 
     RenderGameState(gameObjects){
         this.clearWholeGameArea()
-        gameObjects.entities.forEach(
+        gameObjects.Entities.forEach(
             entity => {
                 this.context.fillStyle = entity.colour
                 let res = this.CalculatePositionWidthAndHeight(entity.x, entity.y, this.gridWidth, this.gridHeight, this.width, this.height);

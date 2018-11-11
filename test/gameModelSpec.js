@@ -1,7 +1,7 @@
 require('mocha')
 const { expect } = require('chai')
 var assert = require('assert');
-var gameModel = require('../model/gameModel');
+var gameModel = require('../model/constants');
 
 describe('game model', function() {
 
