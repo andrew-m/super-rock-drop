@@ -19,10 +19,10 @@ class CanvasGameRenderer {
 
     RenderGameState(gameObjects){
         this.clearWholeGameArea()
-        gameObjects.Entities.forEach(
-            entity => {
-                this.context.fillStyle = entity.colour
-                let res = this.CalculatePositionWidthAndHeight(entity.x, entity.y, this.gridWidth, this.gridHeight, this.width, this.height);
+        gameObjects.Blob.forEach(
+            blob => {
+                this.context.fillStyle = blob.colour
+                let res = this.CalculatePositionWidthAndHeight(blob.x, blob.y, this.gridWidth, this.gridHeight, this.width, this.height);
                 this.context.fillRect(res.x, res.y, res.width, res.height)
             }
         )

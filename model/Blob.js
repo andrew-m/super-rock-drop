@@ -1,4 +1,4 @@
-class Entity {
+class Blob {
     constructor (x, y, colour = "#ff0000") {
         this.x = x
         this.y = y
@@ -6,7 +6,7 @@ class Entity {
     }
 }
 
-module.exports = { Entity }
+module.exports = { Blob }
 
 //todo Investigate the /instanceOf operator
-// if (z instanceof Entity) {}
+// if (z instanceof Blob) {}

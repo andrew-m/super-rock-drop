@@ -1,6 +1,6 @@
 class GameState {
-    constructor(entities = []) {
-        this.Entities = entities
+    constructor(blobs = []) {
+        this.Blobs = blobs
     }
 }
 

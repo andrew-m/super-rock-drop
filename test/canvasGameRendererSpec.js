@@ -2,7 +2,7 @@ require('mocha')
 const { expect } = require('chai')
 const assert = require('assert');
 const CanvasGameRenderer = require('../model/canvasGameRenderer').CanvasGameRenderer;
-const Entity = require('../model/Entity')
+const Blob = require('../model/Blob')
 
 describe('Game Renderer for HTML canvas', function() {
 
