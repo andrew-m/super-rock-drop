@@ -20,10 +20,16 @@
 //Immutable or mutable game state? I think mutable will be fine.
 
 
-function ProcessEvent (event, gameState) {
+function ProcessTickEvent (gameState) {
+    gameState.entities  = gameState.Entities.map(MoveEntityDown);
+    return gameState;
+}
 
+function MoveEntityDown (entity) {
+    entity.y += 1;
+    return entity;
 }
 
 module.exports = {
-    ProcessEvent
+    ProcessTickEvent
 }

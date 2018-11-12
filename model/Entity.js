@@ -1,5 +1,5 @@
 class Entity {
-    constructor (x, y, colour) {
+    constructor (x, y, colour = "#ff0000") {
         this.x = x
         this.y = y
         this.colour = colour

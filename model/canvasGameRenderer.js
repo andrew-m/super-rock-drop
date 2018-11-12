@@ -1,4 +1,4 @@
-var gameModel = require('./constants');
+var gameModel = require('./Constants');
 
 class CanvasGameRenderer {
     constructor (canvas) {

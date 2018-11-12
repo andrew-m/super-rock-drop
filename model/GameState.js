@@ -1,5 +1,9 @@
 class GameState {
-    Constructor(entities = []) {
+    constructor(entities = []) {
         this.Entities = entities
     }
+}
+
+module.exports = {
+    GameState
 }
