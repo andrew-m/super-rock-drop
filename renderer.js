@@ -1,8 +1,11 @@
 let Blob = require ('./model/Blob.js').Blob;
 let GameState = require('./model/GameState.js').GameState;
 const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
+let ProcessTickEvent = require('./model/GameEngine').ProcessTickEvent
 let count = 1
-let time
+let timeAtLastTick = 0
+let gameState
+let canvasGameRenderer
 
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
@@ -10,11 +13,11 @@ const setup = function (doc) {
         return;
     }
 
-    let canvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
+    canvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
 
     canvasGameRenderer.Setup();
 
-    let gameState = new GameState([
+    gameState = new GameState([
             new Blob(1, 1, '#ff0000'),
             new Blob(6, 12, '#00ff00'),
             new Blob(3, 6, '#0000ff')]
@@ -29,6 +32,12 @@ function loop (timestamp) {
     //todo put everything that happens here into a module
     //Keep time, and window objects out here,
     //keep every action _on_ time inside modules and testable.
+
+    if (timestamp - timeAtLastTick > 1000) {
+        gameState = ProcessTickEvent(gameState)
+        canvasGameRenderer.RenderGameState(gameState)
+    }
+
     window.requestAnimationFrame(loop)
 }
 

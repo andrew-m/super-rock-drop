@@ -17,9 +17,9 @@ class CanvasGameRenderer {
         this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
     }
 
-    RenderGameState(gameObjects){
+    RenderGameState(gameState){
         this.clearWholeGameArea()
-        gameObjects.Blob.forEach(
+        gameState.Blobs.forEach(
             blob => {
                 this.context.fillStyle = blob.colour
                 let res = this.CalculatePositionWidthAndHeight(blob.x, blob.y, this.gridWidth, this.gridHeight, this.width, this.height);

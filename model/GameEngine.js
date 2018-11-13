@@ -21,13 +21,28 @@
 
 
 function ProcessTickEvent (gameState) {
-    gameState.Blobs  = gameState.Blobs.map(MoveBlobDown);
+    gameState.Blobs  = gameState.Blobs.map(MoveDownIfNotAtBottom);
     return gameState;
+}
+
+function MoveDownIfNotAtBottom (blob) {
+    if (IsAtBottom(blob)) {
+        return blob
+    } else {
+        return MoveBlobDown(blob)
+    }
 }
 
 function MoveBlobDown (blob) {
     blob.y += 1;
     return blob;
+}
+
+/**
+ * @return {boolean}
+ */
+function IsAtBottom (blob) {
+    return (blob.y === 12)
 }
 
 module.exports = {
