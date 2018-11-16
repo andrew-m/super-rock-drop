@@ -35,4 +35,43 @@ describe('Game Engine On Clock Tick', function() {
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
     })
+
+    it('Should not move blobs if there is a blob below them, which is not moving', () => {
+        let newBlobArray = [new Blob(1, 11), new Blob(1,12)];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.ProcessTickEvent(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(11)
+        expect(newGameState.Blobs[1].x).to.equal(1)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+    })
+})
+
+describe ('The Game engines helper functions', function (){
+    it ('Should test is blob directly below', function (){
+        let blob = new Blob(1,11)
+        let allBlobs = [blob, new Blob(1,12)]
+
+        let result = gameEngine.HasBlobDirectlyBelow(blob, 0, allBlobs)
+        expect(result).to.equal(true);
+    })
+
+    it ('Should test is blob not directly below', function (){
+        let blob = new Blob(1,10)
+        let allBlobs = [blob, new Blob(1,12)]
+
+        let result = gameEngine.HasBlobDirectlyBelow(blob, 0, allBlobs)
+        expect(result).to.equal(false);
+    })
+
+    it ('Should test is blob not directly below', function (){
+        let blob = new Blob(1,11)
+        let allBlobs = [blob, new Blob(2,12)]
+
+        let result = gameEngine.HasBlobDirectlyBelow(blob, 0, allBlobs)
+        expect(result).to.equal(false);
+    })
+
 })

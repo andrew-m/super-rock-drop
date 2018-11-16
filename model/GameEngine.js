@@ -21,12 +21,12 @@
 
 
 function ProcessTickEvent (gameState) {
-    gameState.Blobs  = gameState.Blobs.map(MoveDownIfNotAtBottom);
+    gameState.Blobs  = gameState.Blobs.map(MoveDownIfNotAtBottomOrHasBlobBelow_RefactorMe);
     return gameState;
 }
 
-function MoveDownIfNotAtBottom (blob) {
-    if (IsAtBottom(blob)) {
+function MoveDownIfNotAtBottomOrHasBlobBelow_RefactorMe (blob, index, array) {
+    if (IsAtBottom(blob) || HasBlobDirectlyBelow(blob, index, array)) {
         return blob
     } else {
         return MoveBlobDown(blob)
@@ -45,6 +45,25 @@ function IsAtBottom (blob) {
     return (blob.y === 12)
 }
 
+function isInSameColumn(b, blob) {
+    return b.x === blob.x;
+}
+function isInRowBelow(b, blob) {
+    return b.y === (blob.y + 1);
+}
+/**
+ * @return {boolean}
+ */
+function HasBlobDirectlyBelow (blob, i, allBlobs) {
+    return allBlobs.filter(b => b!== blob) //all the blobs except the blob in question
+        .some(b =>
+            isInSameColumn(b, blob) //same column
+            &&
+            isInRowBelow(b, blob) //one lower down
+        )
+}
+
 module.exports = {
-    ProcessTickEvent
+    ProcessTickEvent,
+    HasBlobDirectlyBelow
 }
