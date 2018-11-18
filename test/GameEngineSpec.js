@@ -8,7 +8,7 @@ const Blob = require('../model/Blob.js').Blob;
 
 describe('Game Engine On Clock Tick', function() {
 
-    it('Should move all blobs down', function() {
+    it('Should move all blobs down to the bottom', function() {
 
         let newBlobArray = [new Blob(1, 1), new Blob(3, 1)];
         let gameState = new GameState(newBlobArray)
@@ -16,10 +16,10 @@ describe('Game Engine On Clock Tick', function() {
         let newGameState = gameEngine.ProcessTickEvent(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
-        expect(newGameState.Blobs[0].y).to.equal(2)
+        expect(newGameState.Blobs[0].y).to.equal(12)
 
         expect(newGameState.Blobs[1].x).to.equal(3)
-        expect(newGameState.Blobs[1].y).to.equal(2)
+        expect(newGameState.Blobs[1].y).to.equal(12)
     })
 
     it('Should not move blobs down once they reach the bottom',() => {
@@ -38,7 +38,7 @@ describe('Game Engine On Clock Tick', function() {
     })
 
     it('Should not move blobs if there is a blob below them, which is not moving', () => {
-        let newBlobArray = [new Blob(1, 11), new Blob(1,12)];
+        let newBlobArray = [new Blob(1, 9), new Blob(1,11)];
         let gameState = new GameState(newBlobArray)
 
         let newGameState = gameEngine.ProcessTickEvent(gameState)

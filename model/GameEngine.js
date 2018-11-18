@@ -21,15 +21,23 @@
 
 
 function ProcessTickEvent(gameState) {
-    gameState.Blobs = gameState.Blobs.map(MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow);
-    return gameState;
+    let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow);
+    let somethingMoved = mapResultsArray.some(result => result.didMove)
+
+    gameState.Blobs = mapResultsArray.map(r => r.Blob)
+
+    if (somethingMoved) {
+        return ProcessTickEvent(gameState)
+    } else {
+        return gameState
+    }
 }
 
 function MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow(blob, index, array) {
     if (IsAtBottom(blob) || HasBlobDirectlyBelow(blob, index, array)) {
-        return blob
+        return {Blob: blob, didMove: false} ///that won't work in a map - unless I map it again. Fine!
     } else {
-        return MoveBlobDown(blob)
+        return {Blob: MoveBlobDown(blob), didMove: true}
     }
 }
 
