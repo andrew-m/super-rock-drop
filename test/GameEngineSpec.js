@@ -17,6 +17,7 @@ describe('Game Engine On Clock Tick', function() {
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(2)
+
         expect(newGameState.Blobs[1].x).to.equal(3)
         expect(newGameState.Blobs[1].y).to.equal(2)
     })

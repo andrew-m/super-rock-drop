@@ -20,12 +20,12 @@
 //Immutable or mutable game state? I think mutable will be fine.
 
 
-function ProcessTickEvent (gameState) {
-    gameState.Blobs  = gameState.Blobs.map(MoveDownIfNotAtBottomOrHasBlobBelow_RefactorMe);
+function ProcessTickEvent(gameState) {
+    gameState.Blobs = gameState.Blobs.map(MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow);
     return gameState;
 }
 
-function MoveDownIfNotAtBottomOrHasBlobBelow_RefactorMe (blob, index, array) {
+function MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow(blob, index, array) {
     if (IsAtBottom(blob) || HasBlobDirectlyBelow(blob, index, array)) {
         return blob
     } else {
@@ -33,7 +33,7 @@ function MoveDownIfNotAtBottomOrHasBlobBelow_RefactorMe (blob, index, array) {
     }
 }
 
-function MoveBlobDown (blob) {
+function MoveBlobDown(blob) {
     blob.y += 1;
     return blob;
 }
@@ -41,21 +41,24 @@ function MoveBlobDown (blob) {
 /**
  * @return {boolean}
  */
-function IsAtBottom (blob) {
+function IsAtBottom(blob) {
     return (blob.y === 12)
 }
 
 function isInSameColumn(b, blob) {
     return b.x === blob.x;
 }
+
 function isInRowBelow(b, blob) {
     return b.y === (blob.y + 1);
 }
+
+
 /**
  * @return {boolean}
  */
-function HasBlobDirectlyBelow (blob, i, allBlobs) {
-    return allBlobs.filter(b => b!== blob) //all the blobs except the blob in question
+function HasBlobDirectlyBelow(blob, i, allBlobs) {
+    return allBlobs.filter(b => b !== blob) //all the blobs except the blob in question
         .some(b =>
             isInSameColumn(b, blob) //same column
             &&
