@@ -48,6 +48,18 @@ describe('Game Engine On Clock Tick', function() {
         expect(newGameState.Blobs[1].x).to.equal(1)
         expect(newGameState.Blobs[1].y).to.equal(12)
     })
+
+    it('Should not move player controlled entities', function (){
+        let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(1,11)];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.ProcessTickEvent(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(9)
+        expect(newGameState.Blobs[1].x).to.equal(1)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+    })
 })
 
 describe ('The Game engines helper functions', function (){

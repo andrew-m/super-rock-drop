@@ -21,7 +21,7 @@
 
 
 function ProcessTickEvent(gameState) {
-    let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow);
+    let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfShouldMoveDown);
     let somethingMoved = mapResultsArray.some(result => result.didMove)
 
     gameState.Blobs = mapResultsArray.map(r => r.Blob)
@@ -33,8 +33,13 @@ function ProcessTickEvent(gameState) {
     }
 }
 
-function MoveDownOneSpaceIfNotAtBottomOrHasBlobBelow(blob, index, array) {
-    if (IsAtBottom(blob) || HasBlobDirectlyBelow(blob, index, array)) {
+function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
+    let shouldStayStill =
+        IsAtBottom(blob)
+        || HasBlobDirectlyBelow(blob, index, array)
+        || blob.isPlayerControlled;
+    
+    if (shouldStayStill) {
         return {Blob: blob, didMove: false} ///that won't work in a map - unless I map it again. Fine!
     } else {
         return {Blob: MoveBlobDown(blob), didMove: true}
@@ -60,7 +65,6 @@ function isInSameColumn(b, blob) {
 function isInRowBelow(b, blob) {
     return b.y === (blob.y + 1);
 }
-
 
 /**
  * @return {boolean}
