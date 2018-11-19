@@ -19,15 +19,34 @@
 
 //Immutable or mutable game state? I think mutable will be fine.
 
+let timeAtLastTick = 0
 
-function ProcessTickEvent(gameState) {
+function AnimationLoop(timestamp, gameRenderer, gameState) {
+
+    if (timestamp - timeAtLastTick > 1000) {
+        gameState = runFramesUntilNothingElseChanges(gameState)
+        gameRenderer.RenderGameState(gameState)
+    }
+
+    return gameState
+}
+
+/**
+ * @return {boolean}
+ */
+function ProcessAnimationFrame(gameState) {
     let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfShouldMoveDown);
     let somethingMoved = mapResultsArray.some(result => result.didMove)
 
     gameState.Blobs = mapResultsArray.map(r => r.Blob)
+    return somethingMoved;
+}
+
+function runFramesUntilNothingElseChanges(gameState) {
+    let somethingMoved = ProcessAnimationFrame(gameState);
 
     if (somethingMoved) {
-        return ProcessTickEvent(gameState)
+        return runFramesUntilNothingElseChanges(gameState)
     } else {
         return gameState
     }
@@ -38,7 +57,7 @@ function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
         IsAtBottom(blob)
         || HasBlobDirectlyBelow(blob, index, array)
         || blob.isPlayerControlled;
-    
+
     if (shouldStayStill) {
         return {Blob: blob, didMove: false} ///that won't work in a map - unless I map it again. Fine!
     } else {
@@ -79,6 +98,7 @@ function HasBlobDirectlyBelow(blob, i, allBlobs) {
 }
 
 module.exports = {
-    ProcessTickEvent,
-    HasBlobDirectlyBelow
+    runFramesUntilNothingElseChanges,
+    HasBlobDirectlyBelow,
+    AnimationLoop
 }

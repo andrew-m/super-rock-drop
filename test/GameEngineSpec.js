@@ -5,7 +5,6 @@ const gameEngine = require('../model/GameEngine.js');
 let GameState = require('../model/GameState.js').GameState;
 const Blob = require('../model/Blob.js').Blob;
 
-
 describe('Game Engine On Clock Tick', function() {
 
     it('Should move all blobs down to the bottom', function() {
@@ -13,7 +12,7 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 1), new Blob(3, 1)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.ProcessTickEvent(gameState)
+        let newGameState = gameEngine.runFramesUntilNothingElseChanges(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -26,12 +25,12 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.ProcessTickEvent(gameState)
+        let newGameState = gameEngine.runFramesUntilNothingElseChanges(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
 
-        newGameState = gameEngine.ProcessTickEvent(gameState)
+        newGameState = gameEngine.runFramesUntilNothingElseChanges(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -41,7 +40,7 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 9), new Blob(1,11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.ProcessTickEvent(gameState)
+        let newGameState = gameEngine.runFramesUntilNothingElseChanges(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(11)
@@ -53,7 +52,7 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(1,11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.ProcessTickEvent(gameState)
+        let newGameState = gameEngine.runFramesUntilNothingElseChanges(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(9)
