@@ -24,10 +24,10 @@ let timeAtLastTick = 0
 function AnimationLoop(timestamp, gameRenderer, gameState) {
 
     if (timestamp - timeAtLastTick > 1000) {
-        gameState = runFramesUntilNothingElseChanges(gameState)
+        gameState = ProcessAnimationFrame(gameState).gameState
         gameRenderer.RenderGameState(gameState)
+        timeAtLastTick = timestamp
     }
-
     return gameState
 }
 
@@ -39,16 +39,15 @@ function ProcessAnimationFrame(gameState) {
     let somethingMoved = mapResultsArray.some(result => result.didMove)
 
     gameState.Blobs = mapResultsArray.map(r => r.Blob)
-    return somethingMoved;
+    return {moved: somethingMoved, gameState: gameState};
 }
 
 function runFramesUntilNothingElseChanges(gameState) {
-    let somethingMoved = ProcessAnimationFrame(gameState);
-
-    if (somethingMoved) {
-        return runFramesUntilNothingElseChanges(gameState)
+    let result = ProcessAnimationFrame(gameState);
+    if (result.moved) {
+        return runFramesUntilNothingElseChanges(result.gameState)
     } else {
-        return gameState
+        return result.gameState
     }
 }
 
