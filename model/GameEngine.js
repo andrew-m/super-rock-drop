@@ -39,18 +39,43 @@ function AnimationLoop(timestamp, gameRenderer, gameState, input) {
 //deterministic processor of events.
 
 function processKeyPress(keyPressed, gameState) {
-    if (keyPressed === "zed") {
+    function moveLeft(blob) {
+        blob.x -= 1
+    }
+
+    function moveRight(blob) {
+        blob.x += 1
+    }
+
+    function moveUp(blob) {
+        blob.y -= 1 //coords start at bottom left apparently. That's a touch confusing.
+    }
+
+    function moveDown(blob) {
+        blob.y += 1
+    }
+
+    function ifPlayerControlled(func) {
         gameState.Blobs.map(blob => {
             if (blob.isPlayerControlled) {
-                blob.x -= 1
+                func(blob);
             }
         })
-    } else if (keyPressed === "ex"){
-        gameState.Blobs.map(blob => {
-            if (blob.isPlayerControlled) {
-                blob.x += 1
-            }
-        })
+    }
+
+    switch (keyPressed) {
+        case "zed":
+            ifPlayerControlled(moveLeft);
+            break;
+        case "ex":
+            ifPlayerControlled(moveRight);
+            break;
+        case "colon":
+            ifPlayerControlled(moveUp);
+            break;
+        case "dot":
+            ifPlayerControlled(moveDown);
+            break;
     }
 }
 

@@ -21,7 +21,8 @@ const setup = function (doc) {
             new Blob(6, 12, '#00ff00'),
             new Blob(3, 5, '#ff00ff'),
             new Blob(3, 6, '#0000ff'),
-            new Blob(3, 1, '#AAFFAA', true)]
+            new Blob(3, 1, '#AAFFAA', true),
+            new Blob(4, 1, '#AAAAFF', true)]
     )
     canvasGameRenderer.RenderGameState(gameState)
 
