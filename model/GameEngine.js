@@ -21,7 +21,10 @@
 
 let timeAtLastTick = 0
 
-function AnimationLoop(timestamp, gameRenderer, gameState) {
+function AnimationLoop(timestamp, gameRenderer, gameState, input) {
+
+    extractKeyboardEvents(input, gameState)
+    gameRenderer.RenderGameState(gameState)
 
     if (timestamp - timeAtLastTick > 1000) {
         gameState = ProcessAnimationFrame(gameState).gameState
@@ -29,6 +32,35 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
         timeAtLastTick = timestamp
     }
     return gameState
+}
+
+//todo extract and unit test extractKeyboardEvents and processKeyPress
+//also seperate the tick logic - as we want game engine to be a pure, and
+//deterministic processor of events.
+
+function processKeyPress(keyPressed, gameState) {
+    if (keyPressed === "zed") {
+        gameState.Blobs.map(blob => {
+            if (blob.isPlayerControlled) {
+                blob.x -= 1
+            }
+        })
+    } else if (keyPressed === "ex"){
+        gameState.Blobs.map(blob => {
+            if (blob.isPlayerControlled) {
+                blob.x += 1
+            }
+        })
+    }
+}
+
+function extractKeyboardEvents(input, gameState) {
+    input = Object.entries(input.discretePressedKeys).map(keyArray => {
+        if (keyArray[1].pressed) {
+            processKeyPress(keyArray[0], gameState)
+            input.discretePressedKeys[keyArray[0]].pressed = false;
+        }
+    })
 }
 
 /**
