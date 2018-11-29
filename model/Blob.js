@@ -8,6 +8,3 @@ class Blob {
 }
 
 module.exports = { Blob }
-
-//todo Investigate the /instanceOf operator
-// if (z instanceof Blob) {}

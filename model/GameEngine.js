@@ -23,7 +23,7 @@ let timeAtLastTick = 0
 
 function AnimationLoop(timestamp, gameRenderer, gameState, input) {
 
-    extractKeyboardEvents(input, gameState)
+    gameState = extractKeyboardEvents(input, gameState)
     gameRenderer.RenderGameState(gameState)
 
     if (timestamp - timeAtLastTick > 1000) {
@@ -38,55 +38,81 @@ function AnimationLoop(timestamp, gameRenderer, gameState, input) {
 //also seperate the tick logic - as we want game engine to be a pure, and
 //deterministic processor of events.
 
+function ifPlayerMoveLeft(gameState) {
+    return ifPlayerControlled(moveLeft, gameState);
+}
+
+function ifPlayerMoverRight(gameState) {
+    return ifPlayerControlled(moveRight, gameState);
+}
+
+function ifPlayerMoveUp(gameState) {
+    return ifPlayerControlled(moveUp, gameState);
+}
+
+function ifPLayerMoveDown(gameState) {
+    return ifPlayerControlled(moveDown, gameState);
+}
+
 function processKeyPress(keyPressed, gameState) {
-    function moveLeft(blob) {
-        blob.x -= 1
-    }
-
-    function moveRight(blob) {
-        blob.x += 1
-    }
-
-    function moveUp(blob) {
-        blob.y -= 1 //coords start at bottom left apparently. That's a touch confusing.
-    }
-
-    function moveDown(blob) {
-        blob.y += 1
-    }
-
-    function ifPlayerControlled(func) {
-        gameState.Blobs.map(blob => {
-            if (blob.isPlayerControlled) {
-                func(blob);
-            }
-        })
-    }
-
     switch (keyPressed) {
         case "zed":
-            ifPlayerControlled(moveLeft);
+            gameState = ifPlayerMoveLeft(gameState);
             break;
         case "ex":
-            ifPlayerControlled(moveRight);
+            gameState = ifPlayerMoverRight(gameState);
             break;
         case "colon":
-            ifPlayerControlled(moveUp);
+            gameState = ifPlayerMoveUp(gameState);
             break;
         case "dot":
-            ifPlayerControlled(moveDown);
+            gameState = ifPLayerMoveDown(gameState);
             break;
     }
+    return gameState
 }
 
 function extractKeyboardEvents(input, gameState) {
+
     input = Object.entries(input.discretePressedKeys).map(keyArray => {
         if (keyArray[1].pressed) {
-            processKeyPress(keyArray[0], gameState)
+            gameState = processKeyPress(keyArray[0], gameState)
             input.discretePressedKeys[keyArray[0]].pressed = false;
         }
     })
+    return gameState
 }
+
+function ifPlayerControlled(func, gameState) {
+    gameState.Blobs = gameState.Blobs.map(blob => {
+        if (blob.isPlayerControlled) {
+            blob = func(blob);
+        }
+        return blob
+    })
+    return gameState
+}
+
+function moveLeft(blob) {
+    blob.x -= 1
+    return blob
+}
+
+function moveRight(blob) {
+    blob.x += 1
+    return blob
+}
+
+function moveUp(blob) {
+    blob.y -= 1 //coords start at bottom left apparently. That's a touch confusing.
+    return blob
+}
+
+function moveDown(blob) {
+    blob.y += 1
+    return blob
+}
+
 
 /**
  * @return {boolean}

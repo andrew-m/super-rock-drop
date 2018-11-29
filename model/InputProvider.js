@@ -71,5 +71,4 @@ function keyup (event) {
     }
 }
 
-
 module.exports = {keydown, keyup, input}
