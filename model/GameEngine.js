@@ -19,69 +19,22 @@
 
 //Immutable or mutable game state? I think mutable will be fine.
 
-let timeAtLastTick = 0
+//Todo get rid of any concept of animation frames in Game Engine - they're not game engine events!
 
-function AnimationLoop(timestamp, gameRenderer, gameState, input) {
 
-    gameState = extractKeyboardEvents(input, gameState)
-    gameRenderer.RenderGameState(gameState)
-
-    if (timestamp - timeAtLastTick > 1000) {
-        gameState = ProcessAnimationFrame(gameState).gameState
-        gameRenderer.RenderGameState(gameState)
-        timeAtLastTick = timestamp
-    }
-    return gameState
+function keyLeft(gameState) {
+    return ifPlayerControlled(moveLeft, gameState)
 }
-
-//todo extract and unit test extractKeyboardEvents and processKeyPress
-//also seperate the tick logic - as we want game engine to be a pure, and
-//deterministic processor of events.
-
-function ifPlayerMoveLeft(gameState) {
-    return ifPlayerControlled(moveLeft, gameState);
-}
-
-function ifPlayerMoverRight(gameState) {
+function keyRight(gameState) {
     return ifPlayerControlled(moveRight, gameState);
 }
-
-function ifPlayerMoveUp(gameState) {
+function keyDown(gameState) {
+    return ifPlayerControlled(moveDown, gameState);
+}
+function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
 }
 
-function ifPLayerMoveDown(gameState) {
-    return ifPlayerControlled(moveDown, gameState);
-}
-
-function processKeyPress(keyPressed, gameState) {
-    switch (keyPressed) {
-        case "zed":
-            gameState = ifPlayerMoveLeft(gameState);
-            break;
-        case "ex":
-            gameState = ifPlayerMoverRight(gameState);
-            break;
-        case "colon":
-            gameState = ifPlayerMoveUp(gameState);
-            break;
-        case "dot":
-            gameState = ifPLayerMoveDown(gameState);
-            break;
-    }
-    return gameState
-}
-
-function extractKeyboardEvents(input, gameState) {
-
-    input = Object.entries(input.discretePressedKeys).map(keyArray => {
-        if (keyArray[1].pressed) {
-            gameState = processKeyPress(keyArray[0], gameState)
-            input.discretePressedKeys[keyArray[0]].pressed = false;
-        }
-    })
-    return gameState
-}
 
 function ifPlayerControlled(func, gameState) {
     gameState.Blobs = gameState.Blobs.map(blob => {
@@ -114,6 +67,11 @@ function moveDown(blob) {
 }
 
 
+//todo this isn't quite right.
+//moves blobs a max of one square (probably). Requires multiple calls to complete,
+//by which time many blobs might have moved two squares.
+//each blob should move one square only
+//but each blob _should_ move - even (especially) if above another square that moved.
 /**
  * @return {boolean}
  */
@@ -123,15 +81,6 @@ function ProcessAnimationFrame(gameState) {
 
     gameState.Blobs = mapResultsArray.map(r => r.Blob)
     return {moved: somethingMoved, gameState: gameState};
-}
-
-function runFramesUntilNothingElseChanges(gameState) {
-    let result = ProcessAnimationFrame(gameState);
-    if (result.moved) {
-        return runFramesUntilNothingElseChanges(result.gameState)
-    } else {
-        return result.gameState
-    }
 }
 
 function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
@@ -180,7 +129,11 @@ function HasBlobDirectlyBelow(blob, i, allBlobs) {
 }
 
 module.exports = {
-    runFramesUntilNothingElseChanges,
+    // runFramesUntilNothingElseChanges,
     HasBlobDirectlyBelow,
-    AnimationLoop
+    ProcessAnimationFrame,
+    keyLeft,
+    keyRight,
+    keyDown,
+    keyUp
 }
