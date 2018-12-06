@@ -72,6 +72,21 @@ function moveDown(blob) {
 //by which time many blobs might have moved two squares.
 //each blob should move one square only
 //but each blob _should_ move - even (especially) if above another square that moved.
+// No. Things that fall, fall all the way. This is why we need to seperate the "tick" from everything else.
+// Player operated blobs don't fall, but they do tick down.
+// Animation (slow falling) is not a Game engine concern, events would pause during that time.
+// Although other concerns can store state in the gameState - such as the difference between "target" location
+// and current location during an animation
+
+//Question - game engine initiated events (eg, player controlled blob hits the bottom - causes pops and then a
+// new player entity... Is that all managed from the same origin event (keyboard, clock tick)
+
+//It does feel like those are derived events, triggered by a smaller subset of fundamental events.
+//clock tick, keyboard press. Rocks arrive. Who decides what colour next player blobs are?
+// Would it keep things simple if to start with, gameEngine asks for them? Provided with a random-blob selector.
+// could be implemented locally for now, and some sort of network one later. Which would solve a problem we don't
+// currently have (people cheating in network games by seeing the backlog of blobs further)
+
 /**
  * @return {boolean}
  */
