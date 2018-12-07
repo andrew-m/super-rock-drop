@@ -116,6 +116,15 @@ function MoveBlobDown(blob) {
     return blob;
 }
 
+function moveBlobsThatShouldFallToRestingPosition(gameState) {
+    let result = ProcessAnimationFrame(gameState);
+    if (result.moved) {
+        return moveBlobsThatShouldFallToRestingPosition(result.gameState)
+    } else {
+        return result.gameState
+    }
+}
+
 /**
  * @return {boolean}
  */
@@ -150,5 +159,6 @@ module.exports = {
     keyLeft,
     keyRight,
     keyDown,
-    keyUp
+    keyUp,
+    moveBlobsThatShouldFallToRestingPosition
 }

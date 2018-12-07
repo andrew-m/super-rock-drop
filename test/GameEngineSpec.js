@@ -15,7 +15,7 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 1), new Blob(3, 1)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = runFramesUntilNothingElseChanges(gameState)
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -28,12 +28,12 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = runFramesUntilNothingElseChanges(gameState)
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
 
-        newGameState = runFramesUntilNothingElseChanges(gameState)
+        newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -43,7 +43,7 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 9), new Blob(1,11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = runFramesUntilNothingElseChanges(gameState)
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(11)
@@ -55,7 +55,7 @@ describe('Game Engine On Clock Tick', function() {
         let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(1,11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = runFramesUntilNothingElseChanges(gameState)
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(9)
@@ -123,13 +123,13 @@ describe('On Keyboard Events', function (){
         expect(gameState.Blobs[1].y).to.equal(6)
     })
 })
-
-function runFramesUntilNothingElseChanges(gameState) {
-    let result = gameEngine.ProcessAnimationFrame(gameState);
-    if (result.moved) {
-        return runFramesUntilNothingElseChanges(result.gameState)
-    } else {
-        return result.gameState
-    }
-}
+//
+// function runFramesUntilNothingElseChanges(gameState) {
+//     let result = gameEngine.ProcessAnimationFrame(gameState);
+//     if (result.moved) {
+//         return runFramesUntilNothingElseChanges(result.gameState)
+//     } else {
+//         return result.gameState
+//     }
+// }
 
