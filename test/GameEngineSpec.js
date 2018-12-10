@@ -122,14 +122,14 @@ describe('On Keyboard Events', function (){
         expect(gameState.Blobs[1].x).to.equal(3)
         expect(gameState.Blobs[1].y).to.equal(6)
     })
-})
-//
-// function runFramesUntilNothingElseChanges(gameState) {
-//     let result = gameEngine.ProcessAnimationFrame(gameState);
-//     if (result.moved) {
-//         return runFramesUntilNothingElseChanges(result.gameState)
-//     } else {
-//         return result.gameState
-//     }
-// }
 
+    it('Should not move blobs off the side left', function (){
+        let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(2, 9, "#FFAAAA", true)];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyLeft(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[1].x).to.equal(2)
+    })
+})

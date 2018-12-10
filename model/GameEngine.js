@@ -23,7 +23,7 @@
 
 
 function keyLeft(gameState) {
-    return ifPlayerControlled(moveLeft, gameState)
+    return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
 }
 function keyRight(gameState) {
     return ifPlayerControlled(moveRight, gameState);
@@ -39,16 +39,33 @@ function keyUp(gameState) {
 function ifPlayerControlled(func, gameState) {
     gameState.Blobs = gameState.Blobs.map(blob => {
         if (blob.isPlayerControlled) {
-            blob = func(blob);
+            blob = func(blob, gameState);
         }
         return blob
     })
     return gameState
 }
 
-function moveLeft(blob) {
-    blob.x -= 1
-    return blob
+function moveLeftIfNotAtEdge(blob, gameState) {
+    function wouldGoOffTheEdge(blob1) {
+        return blob1.x <= 1;
+    }
+
+    function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
+        let blobsToLeftOf = blobToleftof(blob2, gameState);
+        return (blobsToLeftOf.length >= 1 && wouldGoOffTheEdge(blobsToLeftOf[0]))
+    }
+
+    function blobToleftof(blob, gameState) {
+        return gameState.Blobs.filter(b => b.x === (blob.x -1) && b.y === blob.y && blob.isPlayerControlled)
+    }
+
+    if (!wouldGoOffTheEdge(blob) && !wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob, gameState)) {
+        blob.x -= 1;
+        return blob
+    } else {
+        return blob
+    }
 }
 
 function moveRight(blob) {

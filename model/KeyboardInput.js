@@ -19,16 +19,19 @@ class KeyboardInput {
 
     keyDown (event) {
         let keyRegistration = this.keyRegistrations.find(keyReg => keyReg.code === event.code);
-        if (keyRegistration.ready) {
+        if (keyRegistration !== undefined && keyRegistration.ready) {
             keyRegistration.callBack()
             keyRegistration.setReady(false)
         }
     }
 
     keyUp (event) {
-        this.keyRegistrations
-            .find(keyReg => keyReg.code === event.code)
-            .setReady(true);
+        let keyRegistration = this.keyRegistrations
+            .find(keyReg => keyReg.code === event.code);
+
+        if (keyRegistration !== undefined) {
+            keyRegistration.setReady(true);
+        }
     }
 }
 
