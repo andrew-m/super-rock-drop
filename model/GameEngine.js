@@ -26,7 +26,7 @@ function keyLeft(gameState) {
     return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
 }
 function keyRight(gameState) {
-    return ifPlayerControlled(moveRight, gameState);
+    return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 function keyDown(gameState) {
     return ifPlayerControlled(moveDown, gameState);
@@ -47,30 +47,47 @@ function ifPlayerControlled(func, gameState) {
 }
 
 function moveLeftIfNotAtEdge(blob, gameState) {
-    function wouldGoOffTheEdge(blob1) {
+    function wouldGoOffTheLeftEdge(blob1) {
         return blob1.x <= 1;
     }
 
     function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
         let blobsToLeftOf = blobToleftof(blob2, gameState);
-        return (blobsToLeftOf.length >= 1 && wouldGoOffTheEdge(blobsToLeftOf[0]))
+        return (blobsToLeftOf.length >= 1 && wouldGoOffTheLeftEdge(blobsToLeftOf[0]))
     }
 
     function blobToleftof(blob, gameState) {
         return gameState.Blobs.filter(b => b.x === (blob.x -1) && b.y === blob.y && blob.isPlayerControlled)
     }
 
-    if (!wouldGoOffTheEdge(blob) && !wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob, gameState)) {
-        blob.x -= 1;
+    if (wouldGoOffTheLeftEdge(blob) || wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob, gameState)) {
         return blob
     } else {
+        blob.x -= 1;
         return blob
     }
 }
 
-function moveRight(blob) {
-    blob.x += 1
-    return blob
+function moveRightIfNotAtEdge(blob, gameState) {
+    function wouldGoOffTheRightEdge(blob1) {
+        return blob1.x >= 6;
+    }
+
+    function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
+        let blobsToRightOf = blobToRightOf(blob2, gameState);
+        return (blobsToRightOf.length >= 1 && wouldGoOffTheRightEdge(blobsToRightOf[0]))
+    }
+
+    function blobToRightOf(blob, gameState) {
+        return gameState.Blobs.filter(b => b.x === (blob.x +1) && b.y === blob.y && blob.isPlayerControlled)
+    }
+
+    if (wouldGoOffTheRightEdge(blob) || wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob, gameState)) {
+        return blob
+    } else {
+        blob.x += 1;
+        return blob
+    }
 }
 
 function moveUp(blob) {

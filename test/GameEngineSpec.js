@@ -132,4 +132,14 @@ describe('On Keyboard Events', function (){
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[1].x).to.equal(2)
     })
+
+    it('Should not move blobs off the right left', function (){
+        let newBlobArray = [new Blob(5, 9, "#AAFFAA", true), new Blob(6, 9, "#FFAAAA", true)];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyRight(gameState)
+
+        expect(newGameState.Blobs[1].x).to.equal(6)
+        expect(newGameState.Blobs[0].x).to.equal(5)
+    })
 })
