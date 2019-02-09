@@ -1,21 +1,18 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "super-rock-drop",
+  "version": "0.1.0",
+  "description": "A Super Foul Eggs clone and Electron learning exercise",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "game",
+    "learning"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Andrew Maddison",
+  "license": "Apache-2.0",
   "devDependencies": {
     "electron": "^3.0.0"
   }
