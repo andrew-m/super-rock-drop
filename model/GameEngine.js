@@ -67,7 +67,6 @@ function keyRotate(gameState) {
             }
         }
     )
-
     return new GameState(newBlobsArray)
 }
 

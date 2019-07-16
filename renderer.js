@@ -31,11 +31,11 @@ const setup = function (doc) {
     canvasGameRenderer.RenderGameState(gameState)
 
     let keys = [
-        new keyRegistration("KeyZ", () => canvasGameRenderer.RenderGameState(GameEngine.keyLeft(gameState))),
-        new keyRegistration("KeyX", () => canvasGameRenderer.RenderGameState(GameEngine.keyRight(gameState))),
-        new keyRegistration("Period", () => canvasGameRenderer.RenderGameState(GameEngine.keyDown(gameState))),
-        new keyRegistration("Semicolon", () => canvasGameRenderer.RenderGameState(GameEngine.keyUp(gameState))),
-        new keyRegistration("Space", () => canvasGameRenderer.RenderGameState(GameEngine.keyRotate(gameState)))
+        new keyRegistration("KeyZ", () => gameState = GameEngine.keyLeft(gameState)),
+        new keyRegistration("KeyX", () => gameState = GameEngine.keyRight(gameState)),
+        new keyRegistration("Period", () => gameState = GameEngine.keyDown(gameState)),
+        new keyRegistration("Semicolon", () => gameState = GameEngine.keyUp(gameState)),
+        new keyRegistration("Space", () => gameState = GameEngine.keyRotate(gameState))
     ]
 
     let ki = new KeyboardInput(keys);
@@ -52,9 +52,9 @@ let timeAtLastTick = 0
 function AnimationLoop(timestamp, gameRenderer, gameState) {
     if (timestamp - timeAtLastTick > 1000) {
         gameState = GameEngine.ProcessAnimationFrame(gameState).gameState
-        gameRenderer.RenderGameState(gameState)
         timeAtLastTick = timestamp
     }
+    gameRenderer.RenderGameState(gameState)
     return gameState
 }
 
