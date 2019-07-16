@@ -7,9 +7,11 @@ Which was in turn inspired by this remarkable talk by Mary Rose Cook who live co
 
 This started as a minimal Electron application based on the [Quick Start Guide](https://electronjs.org/docs/tutorial/quick-start) within the Electron documentation.
 
-# Install dependencies
+### Install dependencies
 npm install
-# Run the app
+### Run the tests
+npm test
+### Run the app
 npm start
 ```
 

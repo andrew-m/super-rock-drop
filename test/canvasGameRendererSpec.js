@@ -42,9 +42,9 @@ describe('Game Renderer for HTML canvas', function() {
             1,1,gridWidth,gridHeight,canvasWidth,canvasHeight
         )
 
-        //x, y, width, height
-        expect(result.x).to.equal(0)
-        expect(result.y).to.equal(0)
+        //x, y, width, height. Remember circles arc around the center, (rectangles from the corner)
+        expect(result.x).to.equal(25)
+        expect(result.y).to.equal(25)
         expect(result.width).to.equal(50)
         expect(result.height).to.equal(50)
     })
@@ -59,8 +59,8 @@ describe('Game Renderer for HTML canvas', function() {
         )
 
         //x, y, width, height
-        expect(result.x).to.equal(250)
-        expect(result.y).to.equal(550)
+        expect(result.x).to.equal(275)
+        expect(result.y).to.equal(575)
         expect(result.width).to.equal(50)
         expect(result.height).to.equal(50)
     })
