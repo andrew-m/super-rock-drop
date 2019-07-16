@@ -19,8 +19,9 @@
 
 //Immutable or mutable game state? I think mutable will be fine.
 
-//Todo get rid of any concept of animation frames in Game Engine - they're not game engine events!
+const GameState = require('../model/GameState.js').GameState;
 
+const Blob = require('../model/Blob.js').Blob;
 
 function keyLeft(gameState) {
     return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
@@ -34,7 +35,63 @@ function keyDown(gameState) {
 function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
 }
+function keyRotate(gameState) {
+    //assume only two player controlled blobs
+    //first make it work, then make it good.
+    //So - any weird old solution that works, works!
+    //But then... are you thinking functionally, are you thinking immutably?
+    //from the original immutable array - you can determine if a blob should move.
+    //Then collect all the blobs back together into a new array. And return it.
 
+    //Sure - but the arrays are immutible - but we're actually mutating the blobs!
+    //So it's a bit pointless, however the strategy is worth a go.
+
+    //should I move? #
+    //Am I to the right? Move down and left. DONE
+    //Am I above? Move right.
+    //Am I below? Move up.
+    //Am I left? Stay put. DONE
+    //Done (if all the "am I" is really "in the original, immutable array, am I?"
+
+    const oldBlobsArray = gameState.Blobs;
+    var newBlobsArray = oldBlobsArray.map(
+        (blob) => {
+            if (blob.isPlayerControlled) {
+                var otherPlayerControlledBlob =
+                    oldBlobsArray.find((b) => {
+                        return b.isPlayerControlled && (blob !== b)
+                    })
+                return whereShouldIBe(blob, otherPlayerControlledBlob)
+            } else {
+                return blob;
+            }
+        }
+    )
+
+    return new GameState(newBlobsArray)
+}
+
+function whereShouldIBe(blob, otherBlob) {
+    let horizontal = blob.y === otherBlob.y;
+
+    let toTheLeft = blob.x < otherBlob.x;
+    if (horizontal) {
+        if (toTheLeft) {
+            return blob;
+        } else {
+            //to the right - move down and left.
+            return new Blob(blob.x -1, blob.y +1, blob.colour, blob.isPlayerControlled)
+        }
+    } else { //vertical
+        let above = blob.y < otherBlob.y
+        if (above) {
+            //move right
+            return new Blob(blob.x +1, blob.y, blob.colour, blob.isPlayerControlled)
+        } else { //below, move up
+            return new Blob(blob.x, blob.y -1, blob.colour, blob.isPlayerControlled)
+        }
+    }
+}
 
 function ifPlayerControlled(func, gameState) {
     gameState.Blobs = gameState.Blobs.map(blob => {
@@ -194,5 +251,7 @@ module.exports = {
     keyRight,
     keyDown,
     keyUp,
-    moveBlobsThatShouldFallToRestingPosition
+    keyRotate,
+    moveBlobsThatShouldFallToRestingPosition,
+    whereShouldIBe
 }

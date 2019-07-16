@@ -27,15 +27,15 @@ const setup = function (doc) {
         new Blob(4, 1, '#AAAAFF', true)];
     // let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(2, 9, "#FFAAAA", true)];
 
-    gameState = new GameState(newBlobArray
-    )
+    gameState = new GameState(newBlobArray)
     canvasGameRenderer.RenderGameState(gameState)
 
     let keys = [
         new keyRegistration("KeyZ", () => canvasGameRenderer.RenderGameState(GameEngine.keyLeft(gameState))),
         new keyRegistration("KeyX", () => canvasGameRenderer.RenderGameState(GameEngine.keyRight(gameState))),
         new keyRegistration("Period", () => canvasGameRenderer.RenderGameState(GameEngine.keyDown(gameState))),
-        new keyRegistration("Semicolon", () => canvasGameRenderer.RenderGameState(GameEngine.keyUp(gameState)))
+        new keyRegistration("Semicolon", () => canvasGameRenderer.RenderGameState(GameEngine.keyUp(gameState))),
+        new keyRegistration("Space", () => canvasGameRenderer.RenderGameState(GameEngine.keyRotate(gameState)))
     ]
 
     let ki = new KeyboardInput(keys);
