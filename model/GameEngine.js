@@ -30,11 +30,18 @@ function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 function keyDown(gameState) {
-    return ifPlayerControlled(moveDownOrCrashIfAtBottom_orPCBlobBelowAtBottom, gameState);
+    return ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
 }
 function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
 }
+
+function getOtherPlayerControlledBlob(blob, oldBlobsArray) {
+    return oldBlobsArray.find((b) => {
+        return b.isPlayerControlled && (blob !== b)
+    });
+}
+
 function keyRotate(gameState) {
     //assume only two player controlled blobs
 
@@ -54,11 +61,7 @@ function keyRotate(gameState) {
     var newBlobsArray = oldBlobsArray.map(
         (blob) => {
             if (blob.isPlayerControlled) {
-                let otherPlayerControlledBlob =
-                    oldBlobsArray.find((b) => {
-                        return b.isPlayerControlled && (blob !== b)
-                    });
-                return whereShouldIBe(blob, otherPlayerControlledBlob)
+                return whereShouldIBe(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray))
             } else {
                 return blob;
             }
@@ -98,12 +101,13 @@ function whereShouldIBe(blob, otherBlob) {
 }
 
 function ifPlayerControlled(func, gameState) {
-    gameState.Blobs = gameState.Blobs.map(blob => {
+    let newBlobArray = gameState.Blobs.map(blob => {
         if (blob.isPlayerControlled) {
             blob = func(blob, gameState);
         }
         return blob
-    })
+    });
+    gameState.Blobs = newBlobArray
     return gameState
 }
 
@@ -157,25 +161,19 @@ function moveUp(blob) {
     return blob
 }
 
-function moveDownOrCrashIfAtBottom_orPCBlobBelowAtBottom(blob, gameState) {
-
-    function pcBlobBelowIsAtBottom(blob2, gameState){
-        let blobsBelow = pcBlobBelow(blob2, gameState);
-        return (blobsBelow.length >= 1 && IsAtBottom(blobsBelow[0]));
+function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
+    function shouldCrashInMyOwnRight(blob1, allBlobs) {
+        return IsAtBottom(blob1) || HasNonPCBlobDirectlyBelow(blob1, allBlobs);
     }
 
-    function pcBlobBelow(blob, gameState) {
-        return gameState.Blobs.filter(b => b.x === blob.x && b.y === (blob.y + 1) && blob.isPlayerControlled)
-    }
-
-    if (IsAtBottom(blob) || pcBlobBelowIsAtBottom(blob, gameState)){
-        blob.isPlayerControlled = false
+    let otherPCBlob = getOtherPlayerControlledBlob(blob, gameState.Blobs);
+    let otherPcBlobExistsAndShouldCrash = otherPCBlob !== undefined && shouldCrashInMyOwnRight(otherPCBlob, gameState.Blobs)
+    if (shouldCrashInMyOwnRight(blob, gameState.Blobs) || otherPcBlobExistsAndShouldCrash){
+        return new Blob(blob.x, blob.y, blob.colour, false)
     } else {
-        blob.y += 1
+        return new Blob(blob.x, blob.y +1, blob.colour, blob.isPlayerControlled)
     }
-    return blob
 }
-
 
 //todo this isn't quite right.
 //moves blobs a max of one square (probably). Requires multiple calls to complete,
@@ -211,7 +209,7 @@ function ProcessAnimationFrame(gameState) {
 function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
     let shouldStayStill =
         IsAtBottom(blob)
-        || HasBlobDirectlyBelow(blob, index, array)
+        || HasNonPCBlobDirectlyBelow(blob, array)
         || blob.isPlayerControlled;
 
     if (shouldStayStill) {
@@ -253,18 +251,20 @@ function isInRowBelow(b, blob) {
 /**
  * @return {boolean}
  */
-function HasBlobDirectlyBelow(blob, i, allBlobs) {
+function HasNonPCBlobDirectlyBelow(blob, allBlobs) {
     return allBlobs.filter(b => b !== blob) //all the blobs except the blob in question
         .some(b =>
             isInSameColumn(b, blob) //same column
             &&
             isInRowBelow(b, blob) //one lower down
+            &&
+            !b.isPlayerControlled
         )
 }
 
 module.exports = {
     // runFramesUntilNothingElseChanges,
-    HasBlobDirectlyBelow,
+    HasNonPCBlobDirectlyBelow,
     ProcessAnimationFrame,
     keyLeft,
     keyRight,

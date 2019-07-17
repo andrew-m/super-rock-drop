@@ -69,7 +69,7 @@ describe('The Game engines helper functions', function () {
         let blob = new Blob(1, 11)
         let allBlobs = [blob, new Blob(1, 12)]
 
-        let result = gameEngine.HasBlobDirectlyBelow(blob, 0, allBlobs)
+        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
         expect(result).to.equal(true);
     })
 
@@ -77,7 +77,7 @@ describe('The Game engines helper functions', function () {
         let blob = new Blob(1, 10)
         let allBlobs = [blob, new Blob(1, 12)]
 
-        let result = gameEngine.HasBlobDirectlyBelow(blob, 0, allBlobs)
+        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
         expect(result).to.equal(false);
     })
 
@@ -85,7 +85,15 @@ describe('The Game engines helper functions', function () {
         let blob = new Blob(1, 11)
         let allBlobs = [blob, new Blob(2, 12)]
 
-        let result = gameEngine.HasBlobDirectlyBelow(blob, 0, allBlobs)
+        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
+        expect(result).to.equal(false);
+    })
+
+    it('Should test is blob not PC blob', function () {
+        let blob = new Blob(1, 11)
+        let allBlobs = [blob, new Blob(1, 12, "#ffffff", true)]
+
+        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
         expect(result).to.equal(false);
     })
 })
@@ -243,8 +251,61 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].y).to.equal(12)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
     })
-})
 
+    it('Vertical PC Blobs should crash and become non PC when they try to collide with non PC blobs below.', function () {
+        let newBlobArray = [
+            new Blob(3, 9, "#AAFFAA", true),
+            new Blob(3, 10, "#FFAAAA", true),
+            new Blob(3, 12, "#AAAAFF", false)
+        ];
+
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the blob
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(10)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[1].x).to.equal(3)
+        expect(newGameState.Blobs[1].y).to.equal(11)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+
+        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the blob
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(10)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[1].x).to.equal(3)
+        expect(newGameState.Blobs[1].y).to.equal(11)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
+    })
+
+    it('Horizontal PC Blobs should crash and become non PC when they try to collide with non PC blobs below.', function () {
+        let newBlobArray = [
+            new Blob(3, 10, "#AAFFAA", true),
+            new Blob(4, 10, "#FFAAAA", true),
+            new Blob(3, 12, "#AAAAFF", false)
+        ];
+
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the blob
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(11)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(11)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+
+        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the blob
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(11)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(11)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
+    })
+})
 
 describe('Where should I be blob intended position calculator', function () {
     it('Should left horizontal blob nowhere', function () {
