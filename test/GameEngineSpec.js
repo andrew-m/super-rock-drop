@@ -192,6 +192,60 @@ describe('On rotate keyboard events', function () {
     })
 })
 
+
+describe('When player controlled blobs crash', function () {
+    it('Horizontal PC Blobs should crash and become non PC when they try to collide with the floor.', function () {
+        let newBlobArray = [
+            new Blob(3, 11, "#AAFFAA", true),
+            new Blob(4, 11, "#FFAAAA", true)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the bottom
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+
+        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the bottom
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
+    })
+
+    it('Vertical PC Blobs should crash and become non PC when they try to collide with the floor.', function () {
+        let newBlobArray = [
+            new Blob(3, 10, "#AAFFAA", true),
+            new Blob(3, 11, "#FFAAAA", true)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the bottom
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(11)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[1].x).to.equal(3)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+
+        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the bottom
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(11)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[1].x).to.equal(3)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
+    })
+})
+
+
 describe('Where should I be blob intended position calculator', function () {
     it('Should left horizontal blob nowhere', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);

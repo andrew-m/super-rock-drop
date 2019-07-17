@@ -30,7 +30,7 @@ function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 function keyDown(gameState) {
-    return ifPlayerControlled(moveDown, gameState);
+    return ifPlayerControlled(moveDownOrCrashIfAtBottom_orPCBlobBelowAtBottom, gameState);
 }
 function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
@@ -54,10 +54,10 @@ function keyRotate(gameState) {
     var newBlobsArray = oldBlobsArray.map(
         (blob) => {
             if (blob.isPlayerControlled) {
-                var otherPlayerControlledBlob =
+                let otherPlayerControlledBlob =
                     oldBlobsArray.find((b) => {
                         return b.isPlayerControlled && (blob !== b)
-                    })
+                    });
                 return whereShouldIBe(blob, otherPlayerControlledBlob)
             } else {
                 return blob;
@@ -136,11 +136,11 @@ function wouldGoOffTheRightEdge(blob1) {
 function moveRightIfNotAtEdge(blob, gameState) {
 
     function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
-        let blobsToRightOf = blobToRightOf(blob2, gameState);
+        let blobsToRightOf = pcBlobToRightOf(blob2, gameState);
         return (blobsToRightOf.length >= 1 && wouldGoOffTheRightEdge(blobsToRightOf[0]))
     }
 
-    function blobToRightOf(blob, gameState) {
+    function pcBlobToRightOf(blob, gameState) {
         return gameState.Blobs.filter(b => b.x === (blob.x +1) && b.y === blob.y && blob.isPlayerControlled)
     }
 
@@ -157,8 +157,22 @@ function moveUp(blob) {
     return blob
 }
 
-function moveDown(blob) {
-    blob.y += 1
+function moveDownOrCrashIfAtBottom_orPCBlobBelowAtBottom(blob, gameState) {
+
+    function pcBlobBelowIsAtBottom(blob2, gameState){
+        let blobsBelow = pcBlobBelow(blob2, gameState);
+        return (blobsBelow.length >= 1 && IsAtBottom(blobsBelow[0]));
+    }
+
+    function pcBlobBelow(blob, gameState) {
+        return gameState.Blobs.filter(b => b.x === blob.x && b.y === (blob.y + 1) && blob.isPlayerControlled)
+    }
+
+    if (IsAtBottom(blob) || pcBlobBelowIsAtBottom(blob, gameState)){
+        blob.isPlayerControlled = false
+    } else {
+        blob.y += 1
+    }
     return blob
 }
 
