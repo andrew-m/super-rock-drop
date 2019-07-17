@@ -37,21 +37,18 @@ function keyUp(gameState) {
 }
 function keyRotate(gameState) {
     //assume only two player controlled blobs
-    //first make it work, then make it good.
-    //So - any weird old solution that works, works!
-    //But then... are you thinking functionally, are you thinking immutably?
-    //from the original immutable array - you can determine if a blob should move.
-    //Then collect all the blobs back together into a new array. And return it.
-
-    //Sure - but the arrays are immutible - but we're actually mutating the blobs!
-    //So it's a bit pointless, however the strategy is worth a go.
 
     //should I move? #
     //Am I to the right? Move down and left. DONE
     //Am I above? Move right.
     //Am I below? Move up.
     //Am I left? Stay put. DONE
-    //Done (if all the "am I" is really "in the original, immutable array, am I?"
+
+    //But...Will I move off the right hand edge?
+        //Am I above (and on right hand edge)?
+        //Stay put.
+        //Am I below and on right hand edge?
+        //Move up and left.
 
     const oldBlobsArray = gameState.Blobs;
     var newBlobsArray = oldBlobsArray.map(
@@ -84,9 +81,17 @@ function whereShouldIBe(blob, otherBlob) {
     } else { //vertical
         let above = blob.y < otherBlob.y
         if (above) {
+            if (wouldGoOffTheRightEdge(blob)) {
+                return blob
+            }
             //move right
             return new Blob(blob.x +1, blob.y, blob.colour, blob.isPlayerControlled)
-        } else { //below, move up
+        } else { //below
+            if (wouldGoOffTheRightEdge(blob)) {
+                //move up and left
+                return new Blob(blob.x -1, blob.y -1, blob.colour, blob.isPlayerControlled)
+            }
+            //move up
             return new Blob(blob.x, blob.y -1, blob.colour, blob.isPlayerControlled)
         }
     }
@@ -124,10 +129,11 @@ function moveLeftIfNotAtEdge(blob, gameState) {
     }
 }
 
+function wouldGoOffTheRightEdge(blob1) {
+    return blob1.x >= 6;
+}
+
 function moveRightIfNotAtEdge(blob, gameState) {
-    function wouldGoOffTheRightEdge(blob1) {
-        return blob1.x >= 6;
-    }
 
     function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
         let blobsToRightOf = blobToRightOf(blob2, gameState);
