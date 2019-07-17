@@ -33,7 +33,12 @@ const setup = function (doc) {
     let keys = [
         new keyRegistration("KeyZ", () => gameState = GameEngine.keyLeft(gameState)),
         new keyRegistration("KeyX", () => gameState = GameEngine.keyRight(gameState)),
-        new keyRegistration("Period", () => gameState = GameEngine.keyDown(gameState)),
+        new keyRegistration(
+            "Period",
+            () => gameState = GameEngine.keyDown(gameState),
+            true,
+            50
+        ),
         new keyRegistration("Semicolon", () => gameState = GameEngine.keyUp(gameState)),
         new keyRegistration("Space", () => gameState = GameEngine.keyRotate(gameState))
     ]

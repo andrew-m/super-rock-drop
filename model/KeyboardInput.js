@@ -1,9 +1,11 @@
 //going to need some persistent state - so this feels like a class.
 
 class keyRegistration {
-    constructor(code, callBack) {
+    constructor(code, callBack, continuous = false, delay = 100) {
         this.code = code
         this.callBack = callBack
+        this.continuous = continuous
+        this.delay = delay
         this.ready = true
     }
 
@@ -22,6 +24,9 @@ class KeyboardInput {
         if (keyRegistration !== undefined && keyRegistration.ready) {
             keyRegistration.callBack()
             keyRegistration.setReady(false)
+            if (keyRegistration.continuous) {
+                setTimeout(function(){ keyRegistration.setReady(true); }, keyRegistration.delay);
+            }
         }
     }
 
