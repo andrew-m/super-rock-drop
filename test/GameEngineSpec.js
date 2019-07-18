@@ -342,6 +342,57 @@ describe('When player controlled blobs crash', function () {
     })
 })
 
+describe('Spawn new player controlled blobs', function () {
+    it('Should populate with PC blobs on demand at the middle of the top row', function () {
+        let newBlobArray = [] //noblobs
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.spawnPlayerControlledBlobs(gameState)
+
+        expect(newGameState.Blobs.length).to.equal(2)
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(1)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(1)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+    })
+
+    it('If PC blobs crash, should spawn new ones', function () {
+        let newBlobArray = [
+            new Blob(3, 12, "#AAFFAA", true),
+            new Blob(4, 12, "#FFAAAA", true)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyDown(gameState) //crash
+
+        expect(newGameState.Blobs.length).to.equal(4)
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
+
+        expect(newGameState.Blobs[2].x).to.equal(3)
+        expect(newGameState.Blobs[2].y).to.equal(1)
+        expect(newGameState.Blobs[2].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[3].x).to.equal(4)
+        expect(newGameState.Blobs[3].y).to.equal(1)
+        expect(newGameState.Blobs[3].isPlayerControlled).to.equal(true)
+
+
+        newGameState = gameEngine.keyDown(gameState) //crash
+
+        expect(newGameState.Blobs.length).to.equal(4)
+    })
+
+})
+
+
 describe('Where should I be blob intended position calculator', function () {
     it('Should left horizontal blob nowhere', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);

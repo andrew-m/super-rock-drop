@@ -23,6 +23,15 @@ const GameState = require('../model/GameState.js').GameState;
 
 const Blob = require('../model/Blob.js').Blob;
 
+function spawnPlayerControlledBlobs(gameState) {
+    //Immutable equivalent of array.push
+    gameState.Blobs = [...gameState.Blobs,
+        new Blob(3, 1, "#ff0000", true),
+        new Blob(4, 1, "#00ff00", true)
+    ];
+    return gameState;
+}
+
 function keyLeft(gameState) {
     return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
 }
@@ -30,7 +39,11 @@ function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 function keyDown(gameState) {
-    return ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
+    let newGameState = ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
+    if (! newGameState.Blobs.some(b => b.isPlayerControlled === true)) {
+        newGameState = spawnPlayerControlledBlobs(gameState)
+    }
+    return newGameState;
 }
 function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
@@ -286,6 +299,7 @@ module.exports = {
     // runFramesUntilNothingElseChanges,
     HasNonPCBlobDirectlyBelow,
     ProcessAnimationFrame,
+    spawnPlayerControlledBlobs,
     keyLeft,
     keyRight,
     keyDown,
