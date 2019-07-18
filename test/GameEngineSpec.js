@@ -98,10 +98,12 @@ describe('The Game engines helper functions', function () {
     })
 })
 
-
-describe('On Keyboard Events', function () {
+describe('On Move Keyboard Events', function () {
     it('Should move player controlled blobs left', function () {
-        let newBlobArray = [new Blob(3, 3, "#AAFFAA", true), new Blob(3, 6)]
+        let newBlobArray = [
+            new Blob(3, 3, "#AAFFAA", true),
+            new Blob(3, 6)
+        ]
         let gameState = new GameState(newBlobArray)
         gameState = gameEngine.keyLeft(gameState)
 
@@ -131,7 +133,9 @@ describe('On Keyboard Events', function () {
         expect(gameState.Blobs[1].x).to.equal(3)
         expect(gameState.Blobs[1].y).to.equal(6)
     })
+})
 
+describe('On Move Keyboard Events Colliding with sides', function () {
     it('Should not move blobs off the side left', function () {
         let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(2, 9, "#FFAAAA", true)];
         let gameState = new GameState(newBlobArray)
@@ -142,7 +146,7 @@ describe('On Keyboard Events', function () {
         expect(newGameState.Blobs[1].x).to.equal(2)
     })
 
-    it('Should not move blobs off the right left', function () {
+    it('Should not move blobs off the right side', function () {
         let newBlobArray = [new Blob(5, 9, "#AAFFAA", true), new Blob(6, 9, "#FFAAAA", true)];
         let gameState = new GameState(newBlobArray)
 
@@ -150,6 +154,38 @@ describe('On Keyboard Events', function () {
 
         expect(newGameState.Blobs[1].x).to.equal(6)
         expect(newGameState.Blobs[0].x).to.equal(5)
+    })
+})
+
+describe('On Move Keyboard Events Colliding with blobs sideways', function () {
+    it('Should not move horizontal blobs left if collide with non PC blob', function () {
+        let newBlobArray = [
+            new Blob(1, 10, "#AAAAFF", false),
+            new Blob(2, 10, "#AAFFAA", true),
+            new Blob(3, 10, "#FFAAAA", true)
+        ];
+
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyLeft(gameState)
+
+        expect(newGameState.Blobs[1].x).to.equal(2) //non PC doesn't move
+        expect(newGameState.Blobs[2].x).to.equal(3)
+    })
+
+    it('Should not move horizontal blobs right if collide with non PC blob', function () {
+        let newBlobArray = [
+            new Blob(4, 10, "#AAAAFF", false),
+            new Blob(2, 10, "#AAFFAA", true),
+            new Blob(3, 10, "#FFAAAA", true)
+        ];
+
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyRight(gameState)
+
+        expect(newGameState.Blobs[1].x).to.equal(2) //non PC doesn't move
+        expect(newGameState.Blobs[2].x).to.equal(3)
     })
 })
 
@@ -199,7 +235,6 @@ describe('On rotate keyboard events', function () {
         expect(newGameState.Blobs[1].y).to.equal(8)
     })
 })
-
 
 describe('When player controlled blobs crash', function () {
     it('Horizontal PC Blobs should crash and become non PC when they try to collide with the floor.', function () {
@@ -312,7 +347,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBe(blobLeft, blobRight);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobLeft, blobRight);
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y)
@@ -322,7 +357,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBe(blobRight, blobLeft);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobRight, blobLeft);
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y + 1)
@@ -332,7 +367,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBe(blobTop, blobBottom);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobTop, blobBottom);
 
         expect(newPositionedBlob.x).to.equal(4)
         expect(newPositionedBlob.y).to.equal(8)
@@ -342,7 +377,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBe(blobBottom, blobTop);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobBottom, blobTop);
 
         expect(newPositionedBlob.x).to.equal(3)
         expect(newPositionedBlob.y).to.equal(8)

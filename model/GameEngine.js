@@ -61,7 +61,7 @@ function keyRotate(gameState) {
     var newBlobsArray = oldBlobsArray.map(
         (blob) => {
             if (blob.isPlayerControlled) {
-                return whereShouldIBe(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray))
+                return whereShouldIBeOnRotate(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray))
             } else {
                 return blob;
             }
@@ -70,7 +70,7 @@ function keyRotate(gameState) {
     return new GameState(newBlobsArray)
 }
 
-function whereShouldIBe(blob, otherBlob) {
+function whereShouldIBeOnRotate(blob, otherBlob) {
     let horizontal = blob.y === otherBlob.y;
 
     let toTheLeft = blob.x < otherBlob.x;
@@ -84,13 +84,13 @@ function whereShouldIBe(blob, otherBlob) {
     } else { //vertical
         let above = blob.y < otherBlob.y
         if (above) {
-            if (wouldGoOffTheRightEdge(blob)) {
+            if (wouldGoOffRightSide(blob)) {
                 return blob
             }
             //move right
             return new Blob(blob.x +1, blob.y, blob.colour, blob.isPlayerControlled)
         } else { //below
-            if (wouldGoOffTheRightEdge(blob)) {
+            if (wouldGoOffRightSide(blob)) {
                 //move up and left
                 return new Blob(blob.x -1, blob.y -1, blob.colour, blob.isPlayerControlled)
             }
@@ -112,47 +112,63 @@ function ifPlayerControlled(func, gameState) {
 }
 
 function moveLeftIfNotAtEdge(blob, gameState) {
+    let otherPlayerControlledBlob = getOtherPlayerControlledBlob(blob, gameState.Blobs)
+
     function wouldGoOffTheLeftEdge(blob1) {
         return blob1.x <= 1;
     }
 
-    function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
-        let blobsToLeftOf = blobToleftof(blob2, gameState);
-        return (blobsToLeftOf.length >= 1 && wouldGoOffTheLeftEdge(blobsToLeftOf[0]))
+    function hasNonPCBlobDirectlyLeft(blob2, allBlobs) {
+        return allBlobs.filter(b => !b.isPlayerControlled) //all the non PC blobs
+            .some(b =>
+                isInSameRow(b, blob2)
+                &&
+                b.x === (blob2.x - 1)
+            )
     }
 
-    function blobToleftof(blob, gameState) {
-        return gameState.Blobs.filter(b => b.x === (blob.x -1) && b.y === blob.y && blob.isPlayerControlled)
+    function cantMoveLeft(blob3, blobArray) {
+        return wouldGoOffTheLeftEdge(blob3) || hasNonPCBlobDirectlyLeft(blob3, blobArray);
     }
 
-    if (wouldGoOffTheLeftEdge(blob) || wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob, gameState)) {
+    if (
+        cantMoveLeft(blob, gameState.Blobs)
+        ||
+        existsAnd(cantMoveLeft,otherPlayerControlledBlob, gameState.Blobs)
+    ) {
         return blob
     } else {
-        blob.x -= 1;
-        return blob
+        return new Blob(blob.x -1, blob.y, blob.colour, blob.isPlayerControlled)
     }
 }
 
-function wouldGoOffTheRightEdge(blob1) {
-    return blob1.x >= 6;
+function wouldGoOffRightSide(blob) {
+    return blob.x >= 6;
+}
+
+function wouldBumpRight(blob, blobArray) {
+    return wouldGoOffRightSide(blob) || hasNonPCBlobDirectlyRight(blob, blobArray);
+}
+
+function existsAnd(func, blob, blobArray) {
+    return blob !== undefined && func(blob, blobArray)
+}
+
+function hasNonPCBlobDirectlyRight(blob, allBlobs) {
+    return allBlobs.filter(b => !b.isPlayerControlled) //all the non PC blobs
+        .some(b =>
+            isInSameRow(b, blob)
+            &&
+            b.x === (blob.x + 1)
+        )
 }
 
 function moveRightIfNotAtEdge(blob, gameState) {
-
-    function wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob2, gameState){
-        let blobsToRightOf = pcBlobToRightOf(blob2, gameState);
-        return (blobsToRightOf.length >= 1 && wouldGoOffTheRightEdge(blobsToRightOf[0]))
-    }
-
-    function pcBlobToRightOf(blob, gameState) {
-        return gameState.Blobs.filter(b => b.x === (blob.x +1) && b.y === blob.y && blob.isPlayerControlled)
-    }
-
-    if (wouldGoOffTheRightEdge(blob) || wouldHitOtherPlayerControlledBlobThatWouldGoOffTheEdge(blob, gameState)) {
+    let otherPlayerControlledBlob = getOtherPlayerControlledBlob(blob, gameState.Blobs);
+    if (wouldBumpRight(blob, gameState.Blobs) || existsAnd(wouldBumpRight, otherPlayerControlledBlob, gameState.Blobs)) {
         return blob
     } else {
-        blob.x += 1;
-        return blob
+        return new Blob(blob.x + 1, blob.y, blob.colour, blob.isPlayerControlled)
     }
 }
 
@@ -244,6 +260,10 @@ function isInSameColumn(b, blob) {
     return b.x === blob.x;
 }
 
+function isInSameRow(b, blob) {
+    return b.y === blob.y;
+}
+
 function isInRowBelow(b, blob) {
     return b.y === (blob.y + 1);
 }
@@ -272,5 +292,5 @@ module.exports = {
     keyUp,
     keyRotate,
     moveBlobsThatShouldFallToRestingPosition,
-    whereShouldIBe
+    whereShouldIBeOnRotate
 }
