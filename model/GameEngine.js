@@ -1,27 +1,8 @@
-//external events are:
-//clock ticks
-//keyboard presses
-//network events arriving.
-
-//Which result in changes to the game state
-//such as blobs moving down
-//or being created
-//or moving side to side
-//or disappearing
-
-//on loop render the game
-//lets start with clock tick events.
-//they move blobs down
-//unless blob or floor below them.
-
-//Game engine does NOT contain game state.
-//It acts upon an event, and a game state, to create a new game state.
-
-//Immutable or mutable game state? I think mutable will be fine.
 
 const GameState = require('../model/GameState.js').GameState;
 
 const Blob = require('../model/Blob.js').Blob;
+const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
 
 function spawnPlayerControlledBlobs(gameState) {
     //Immutable equivalent of array.push
@@ -192,7 +173,7 @@ function moveUp(blob) {
 
 function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
     function shouldCrashInMyOwnRight(blob1, allBlobs) {
-        return IsAtBottom(blob1) || HasNonPCBlobDirectlyBelow(blob1, allBlobs);
+        return isAtBottom(blob1) || hasNonPCBlobDirectlyBelow(blob1, allBlobs);
     }
 
     let otherPCBlob = getOtherPlayerControlledBlob(blob, gameState.Blobs);
@@ -204,29 +185,6 @@ function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
     }
 }
 
-//todo this isn't quite right.
-//moves blobs a max of one square (probably). Requires multiple calls to complete,
-//by which time many blobs might have moved two squares.
-//each blob should move one square only
-//but each blob _should_ move - even (especially) if above another square that moved.
-// No. Things that fall, fall all the way. This is why we need to seperate the "tick" from everything else.
-// Player operated blobs don't fall, but they do tick down.
-// Animation (slow falling) is not a Game engine concern, events would pause during that time.
-// Although other concerns can store state in the gameState - such as the difference between "target" location
-// and current location during an animation
-
-//Question - game engine initiated events (eg, player controlled blob hits the bottom - causes pops and then a
-// new player entity... Is that all managed from the same origin event (keyboard, clock tick)
-
-//It does feel like those are derived events, triggered by a smaller subset of fundamental events.
-//clock tick, keyboard press. Rocks arrive. Who decides what colour next player blobs are?
-// Would it keep things simple if to start with, gameEngine asks for them? Provided with a random-blob selector.
-// could be implemented locally for now, and some sort of network one later. Which would solve a problem we don't
-// currently have (people cheating in network games by seeing the backlog of blobs further)
-
-/**
- * @return {boolean}
- */
 function ProcessAnimationFrame(gameState) {
     let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfShouldMoveDown);
     let somethingMoved = mapResultsArray.some(result => result.didMove)
@@ -237,8 +195,8 @@ function ProcessAnimationFrame(gameState) {
 
 function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
     let shouldStayStill =
-        IsAtBottom(blob)
-        || HasNonPCBlobDirectlyBelow(blob, array)
+        isAtBottom(blob)
+        || hasNonPCBlobDirectlyBelow(blob, array)
         || blob.isPlayerControlled;
 
     if (shouldStayStill) {
@@ -262,42 +220,16 @@ function moveBlobsThatShouldFallToRestingPosition(gameState) {
     }
 }
 
-/**
- * @return {boolean}
- */
-function IsAtBottom(blob) {
+function isAtBottom(blob) {
     return (blob.y === 12)
-}
-
-function isInSameColumn(b, blob) {
-    return b.x === blob.x;
 }
 
 function isInSameRow(b, blob) {
     return b.y === blob.y;
 }
 
-function isInRowBelow(b, blob) {
-    return b.y === (blob.y + 1);
-}
-
-/**
- * @return {boolean}
- */
-function HasNonPCBlobDirectlyBelow(blob, allBlobs) {
-    return allBlobs.filter(b => b !== blob) //all the blobs except the blob in question
-        .some(b =>
-            isInSameColumn(b, blob) //same column
-            &&
-            isInRowBelow(b, blob) //one lower down
-            &&
-            !b.isPlayerControlled
-        )
-}
-
 module.exports = {
     // runFramesUntilNothingElseChanges,
-    HasNonPCBlobDirectlyBelow,
     ProcessAnimationFrame,
     spawnPlayerControlledBlobs,
     keyLeft,

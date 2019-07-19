@@ -15,6 +15,26 @@ npm test
 npm start
 ```
 
+## Old Notes on the Game Engine:
+
+As much as possible (and more as I understand what I'm doing) the Game Engine is a pure function.
+It acts on the game state in a deterministic way, and holds no state of it's own.
+
+external events are:
+    clock ticks
+    keyboard presses
+    network events arriving.
+
+Which result in changes to the game state
+    such as blobs moving down
+    or being created
+    or moving side to side
+    or disappearing
+
+I aspire to make GameState immutable - the Blobs Array _is_ immutable (and needs to be).
+
+
+
 Copyright 2019 Andrew Maddison
 
    Licensed under the Apache License, Version 2.0 (the "License");

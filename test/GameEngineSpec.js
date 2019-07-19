@@ -64,40 +64,6 @@ describe('Game Engine On Clock Tick', function () {
     })
 })
 
-describe('The Game engines helper functions', function () {
-    it('Should test is blob directly below', function () {
-        let blob = new Blob(1, 11)
-        let allBlobs = [blob, new Blob(1, 12)]
-
-        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
-        expect(result).to.equal(true);
-    })
-
-    it('Should test is blob not directly below', function () {
-        let blob = new Blob(1, 10)
-        let allBlobs = [blob, new Blob(1, 12)]
-
-        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
-        expect(result).to.equal(false);
-    })
-
-    it('Should test is blob not directly below', function () {
-        let blob = new Blob(1, 11)
-        let allBlobs = [blob, new Blob(2, 12)]
-
-        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
-        expect(result).to.equal(false);
-    })
-
-    it('Should test is blob not PC blob', function () {
-        let blob = new Blob(1, 11)
-        let allBlobs = [blob, new Blob(1, 12, "#ffffff", true)]
-
-        let result = gameEngine.HasNonPCBlobDirectlyBelow(blob, allBlobs)
-        expect(result).to.equal(false);
-    })
-})
-
 describe('On Move Keyboard Events', function () {
     it('Should move player controlled blobs left', function () {
         let newBlobArray = [
