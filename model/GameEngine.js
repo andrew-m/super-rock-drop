@@ -3,6 +3,9 @@ const GameState = require('../model/GameState.js').GameState;
 
 const Blob = require('../model/Blob.js').Blob;
 const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
+const getOtherPlayerControlledBlob = require('../model/GameStateQueries.js').getOtherPlayerControlledBlob;
+const hasNonPCBlobDirectlyRight = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyRight;
+const hasNonPCBlobDirectlyLeft = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyLeft;
 
 function spawnPlayerControlledBlobs(gameState) {
     //Immutable equivalent of array.push
@@ -30,12 +33,6 @@ function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
 }
 
-function getOtherPlayerControlledBlob(blob, oldBlobsArray) {
-    return oldBlobsArray.find((b) => {
-        return b.isPlayerControlled && (blob !== b)
-    });
-}
-
 function keyRotate(gameState) {
     //assume only two player controlled blobs
 
@@ -55,7 +52,7 @@ function keyRotate(gameState) {
     var newBlobsArray = oldBlobsArray.map(
         (blob) => {
             if (blob.isPlayerControlled) {
-                return whereShouldIBeOnRotate(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray))
+                return whereShouldIBeOnRotate(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray), oldBlobsArray)
             } else {
                 return blob;
             }
@@ -64,7 +61,7 @@ function keyRotate(gameState) {
     return new GameState(newBlobsArray)
 }
 
-function whereShouldIBeOnRotate(blob, otherBlob) {
+function whereShouldIBeOnRotate(blob, otherBlob, blobArray) {
     let horizontal = blob.y === otherBlob.y;
 
     let toTheLeft = blob.x < otherBlob.x;
@@ -78,13 +75,13 @@ function whereShouldIBeOnRotate(blob, otherBlob) {
     } else { //vertical
         let above = blob.y < otherBlob.y
         if (above) {
-            if (wouldGoOffRightSide(blob)) {
+            if (wouldBumpRight(blob, blobArray)) {
                 return blob
             }
             //move right
             return new Blob(blob.x +1, blob.y, blob.colour, blob.isPlayerControlled)
         } else { //below
-            if (wouldGoOffRightSide(blob)) {
+            if (wouldBumpRight(otherBlob, blobArray)) {
                 //move up and left
                 return new Blob(blob.x -1, blob.y -1, blob.colour, blob.isPlayerControlled)
             }
@@ -112,15 +109,6 @@ function moveLeftIfNotAtEdge(blob, gameState) {
         return blob1.x <= 1;
     }
 
-    function hasNonPCBlobDirectlyLeft(blob2, allBlobs) {
-        return allBlobs.filter(b => !b.isPlayerControlled) //all the non PC blobs
-            .some(b =>
-                isInSameRow(b, blob2)
-                &&
-                b.x === (blob2.x - 1)
-            )
-    }
-
     function cantMoveLeft(blob3, blobArray) {
         return wouldGoOffTheLeftEdge(blob3) || hasNonPCBlobDirectlyLeft(blob3, blobArray);
     }
@@ -146,15 +134,6 @@ function wouldBumpRight(blob, blobArray) {
 
 function existsAnd(func, blob, blobArray) {
     return blob !== undefined && func(blob, blobArray)
-}
-
-function hasNonPCBlobDirectlyRight(blob, allBlobs) {
-    return allBlobs.filter(b => !b.isPlayerControlled) //all the non PC blobs
-        .some(b =>
-            isInSameRow(b, blob)
-            &&
-            b.x === (blob.x + 1)
-        )
 }
 
 function moveRightIfNotAtEdge(blob, gameState) {
@@ -222,10 +201,6 @@ function moveBlobsThatShouldFallToRestingPosition(gameState) {
 
 function isAtBottom(blob) {
     return (blob.y === 12)
-}
-
-function isInSameRow(b, blob) {
-    return b.y === blob.y;
 }
 
 module.exports = {

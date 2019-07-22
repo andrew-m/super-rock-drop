@@ -200,6 +200,22 @@ describe('On rotate keyboard events', function () {
         expect(newGameState.Blobs[1].x).to.equal(5)
         expect(newGameState.Blobs[1].y).to.equal(8)
     })
+
+    it('Should rotate player controlled blobs that are vertical and would bump non-PC blobs to the right, left of the top blob', function () {
+        let newBlobArray = [
+            new Blob(5, 8, "#AAFFAA", true),
+            new Blob(5, 9, "#FFAAAA", true),
+            new Blob(6, 8, "#FFAAAA", false)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyRotate(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(5)
+        expect(newGameState.Blobs[0].y).to.equal(8)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(8)
+    })
 })
 
 describe('When player controlled blobs crash', function () {
@@ -308,6 +324,7 @@ describe('When player controlled blobs crash', function () {
     })
 })
 
+
 describe('Spawn new player controlled blobs', function () {
     it('Should populate with PC blobs on demand at the middle of the top row', function () {
         let newBlobArray = [] //noblobs
@@ -364,7 +381,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobLeft, blobRight);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobLeft, blobRight, [blobLeft, blobRight]);
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y)
@@ -374,7 +391,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobRight, blobLeft);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobRight, blobLeft, [blobLeft, blobRight]);
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y + 1)
@@ -384,7 +401,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobTop, blobBottom);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobTop, blobBottom, [blobTop, blobBottom]);
 
         expect(newPositionedBlob.x).to.equal(4)
         expect(newPositionedBlob.y).to.equal(8)
@@ -394,7 +411,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobBottom, blobTop);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobBottom, blobTop, [blobBottom, blobTop]);
 
         expect(newPositionedBlob.x).to.equal(3)
         expect(newPositionedBlob.y).to.equal(8)
