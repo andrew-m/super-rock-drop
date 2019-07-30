@@ -57,28 +57,19 @@ function makePCBlobsNonPC(oldBlobsArray) {
 }
 
 function keyRotate(gameState) {
-    const oldBlobsArray = gameState.Blobs;
-    //todo refactor this to use ifplayercontrolled
-    var newBlobsArray = oldBlobsArray.map(
-        (blob) => {
-            if (blob.isPlayerControlled) {
-                let gameStateAfterRotate = whereShouldIBeOnRotate(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray), oldBlobsArray);
-                return (gameStateAfterRotate)
-            } else {
-                return blob;
-            }
-        }
-    )
-
-    if (pcBlobHasCrashedIntoOtherBlob(newBlobsArray)) {
+    let oldBlobsArray = gameState.Blobs;
+    var newGameState = ifPlayerControlled(whereShouldIBeOnRotate, gameState)
+    if (pcBlobHasCrashedIntoOtherBlob(newGameState.Blobs)) {
         let KilledBlobsArray = makePCBlobsNonPC(oldBlobsArray);
         return new GameState(KilledBlobsArray)
     }
 
-    return new GameState(newBlobsArray)
+    return newGameState
 }
 
-function whereShouldIBeOnRotate(blob, otherBlob, blobArray) {
+function whereShouldIBeOnRotate(blob, gameState) {
+    let blobArray = gameState.Blobs
+    let otherBlob = getOtherPlayerControlledBlob(blob, blobArray)
     let horizontal = blob.y === otherBlob.y;
 
     let toTheLeft = blob.x < otherBlob.x;
@@ -221,7 +212,6 @@ function isAtBottom(blob) {
 }
 
 module.exports = {
-    // runFramesUntilNothingElseChanges,
     ProcessAnimationFrame,
     spawnPlayerControlledBlobs,
     keyLeft,

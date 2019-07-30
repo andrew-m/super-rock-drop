@@ -5,9 +5,6 @@ const gameEngine = require('../model/GameEngine.js');
 let GameState = require('../model/GameState.js').GameState;
 const Blob = require('../model/Blob.js').Blob;
 
-//todo get rid of runFramesUntilNothingElseChanges function, (and the "moved" variable Game Engine returns for it.
-//You'll need to refactor these tests to have multiple ticks.
-
 describe('Game Engine On Clock Tick', function () {
 
     it('Should move all blobs down to the bottom', function () {
@@ -421,7 +418,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobLeft, blobRight, [blobLeft, blobRight]);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobLeft, new GameState([blobLeft, blobRight]));
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y)
@@ -431,7 +428,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobRight, blobLeft, [blobLeft, blobRight]);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobRight, new GameState([blobLeft, blobRight]));
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y + 1)
@@ -441,7 +438,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobTop, blobBottom, [blobTop, blobBottom]);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobTop, new GameState([blobTop, blobBottom]));
 
         expect(newPositionedBlob.x).to.equal(4)
         expect(newPositionedBlob.y).to.equal(8)
@@ -451,7 +448,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobBottom, blobTop, [blobBottom, blobTop]);
+        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobBottom, new GameState([blobBottom, blobTop]));
 
         expect(newPositionedBlob.x).to.equal(3)
         expect(newPositionedBlob.y).to.equal(8)
