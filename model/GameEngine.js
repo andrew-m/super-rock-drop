@@ -29,35 +29,52 @@ function keyDown(gameState) {
     }
     return newGameState;
 }
+
 function keyUp(gameState) {
     return ifPlayerControlled(moveUp, gameState);
 }
 
+function areInTheSamePlace(c, b) {
+    return (c.x === b.x && c.y === b.y);
+}
+
+function blobIsInSamePlaceAsTheseBlobs(oldBlobArray, b) {
+    let b1 = oldBlobArray.some(c => areInTheSamePlace(c, b));
+    return b1
+}
+
+function pcBlobHasCrashedIntoOtherBlob(currentBlobArray) {
+    let justPCBlobs = currentBlobArray.filter(a => {return a.isPlayerControlled});
+    let nonPCBlobs = currentBlobArray.filter(a => {return !a.isPlayerControlled});
+    let b3 = justPCBlobs.some(b => {
+            return blobIsInSamePlaceAsTheseBlobs(nonPCBlobs, b);
+        });
+    return b3
+}
+
+function makePCBlobsNonPC(oldBlobsArray) {
+    return oldBlobsArray.map(b => b.isPlayerControlled ? new Blob(b.x, b.y, b.colour, false) : b);
+}
+
 function keyRotate(gameState) {
-    //assume only two player controlled blobs
-
-    //should I move? #
-    //Am I to the right? Move down and left. DONE
-    //Am I above? Move right.
-    //Am I below? Move up.
-    //Am I left? Stay put. DONE
-
-    //But...Will I move off the right hand edge?
-        //Am I above (and on right hand edge)?
-        //Stay put.
-        //Am I below and on right hand edge?
-        //Move up and left.
-
     const oldBlobsArray = gameState.Blobs;
+    //todo refactor this to use ifplayercontrolled
     var newBlobsArray = oldBlobsArray.map(
         (blob) => {
             if (blob.isPlayerControlled) {
-                return whereShouldIBeOnRotate(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray), oldBlobsArray)
+                let gameStateAfterRotate = whereShouldIBeOnRotate(blob, getOtherPlayerControlledBlob(blob, oldBlobsArray), oldBlobsArray);
+                return (gameStateAfterRotate)
             } else {
                 return blob;
             }
         }
     )
+
+    if (pcBlobHasCrashedIntoOtherBlob(newBlobsArray)) {
+        let KilledBlobsArray = makePCBlobsNonPC(oldBlobsArray);
+        return new GameState(KilledBlobsArray)
+    }
+
     return new GameState(newBlobsArray)
 }
 
@@ -146,7 +163,7 @@ function moveRightIfNotAtEdge(blob, gameState) {
 }
 
 function moveUp(blob) {
-    blob.y -= 1 //coords start at bottom left apparently. That's a touch confusing.
+    blob.y -= 1 //coords (1,1) start at top left apparently.
     return blob
 }
 
@@ -213,5 +230,6 @@ module.exports = {
     keyUp,
     keyRotate,
     moveBlobsThatShouldFallToRestingPosition,
-    whereShouldIBeOnRotate
+    whereShouldIBeOnRotate,
+    pcBlobHasCrashedIntoOtherBlob
 }

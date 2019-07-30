@@ -324,6 +324,46 @@ describe('When player controlled blobs crash', function () {
     })
 })
 
+describe('On rotate crashes', function () {
+    it('Should crash when blobs rotated onto non PC blobs from above and right', function () {
+        let newBlobArray = [
+            new Blob(3, 9, "#AAFFAA", true),
+            new Blob(4, 9, "#FFAAAA", true),
+            new Blob(3, 10, "#FFAAAA", false)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyRotate(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(3)
+        expect(newGameState.Blobs[0].y).to.equal(9)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[1].x).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(9)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
+    })
+})
+
+describe ('Should detect crashed blobs', function () {
+    it('Should return true if PC blob in same place as Non PC blob', function () {
+        let newBlobArray = [
+            new Blob(4, 9, "#AAFFAA", true),
+            new Blob(4, 10, "#FFAAAA", true),
+            new Blob(4, 10, "#FFAAAA", false)
+        ]
+        let isCrashed = gameEngine.pcBlobHasCrashedIntoOtherBlob(newBlobArray);
+        expect(isCrashed).to.equal(true)
+    })
+    it('Should return false if PC blob in same place as itself', function () {
+        let newBlobArray = [
+            new Blob(4, 9, "#AAFFAA", true),
+            new Blob(4, 10, "#FFAAAA", true),
+        ]
+        let isCrashed = gameEngine.pcBlobHasCrashedIntoOtherBlob(newBlobArray);
+        expect(isCrashed).to.equal(false
+        )
+    })
+})
 
 describe('Spawn new player controlled blobs', function () {
     it('Should populate with PC blobs on demand at the middle of the top row', function () {
