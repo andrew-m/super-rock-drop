@@ -367,7 +367,7 @@ describe('Spawn new player controlled blobs', function () {
         let newBlobArray = [] //noblobs
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.spawnPlayerControlledBlobs(gameState)
+        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
 
         expect(newGameState.Blobs.length).to.equal(2)
 
@@ -379,37 +379,24 @@ describe('Spawn new player controlled blobs', function () {
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
     })
 
-    it('If PC blobs crash, should spawn new ones', function () {
+    it('Should not populate with PC blobs if existing PC blobs', function () {
         let newBlobArray = [
-            new Blob(3, 12, "#AAFFAA", true),
-            new Blob(4, 12, "#FFAAAA", true)
-        ];
+            new Blob(4, 9, "#AAFFAA", true),
+            new Blob(4, 10, "#FFAAAA", true)
+        ]
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyDown(gameState) //crash
+        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
 
-        expect(newGameState.Blobs.length).to.equal(4)
+        expect(newGameState.Blobs.length).to.equal(2)
 
-        expect(newGameState.Blobs[0].x).to.equal(3)
-        expect(newGameState.Blobs[0].y).to.equal(12)
-        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
+        expect(newGameState.Blobs[0].x).to.equal(4)
+        expect(newGameState.Blobs[0].y).to.equal(9)
+        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
         expect(newGameState.Blobs[1].x).to.equal(4)
-        expect(newGameState.Blobs[1].y).to.equal(12)
-        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
-
-        expect(newGameState.Blobs[2].x).to.equal(3)
-        expect(newGameState.Blobs[2].y).to.equal(1)
-        expect(newGameState.Blobs[2].isPlayerControlled).to.equal(true)
-        expect(newGameState.Blobs[3].x).to.equal(4)
-        expect(newGameState.Blobs[3].y).to.equal(1)
-        expect(newGameState.Blobs[3].isPlayerControlled).to.equal(true)
-
-
-        newGameState = gameEngine.keyDown(gameState) //crash
-
-        expect(newGameState.Blobs.length).to.equal(4)
+        expect(newGameState.Blobs[1].y).to.equal(10)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
     })
-
 })
 
 

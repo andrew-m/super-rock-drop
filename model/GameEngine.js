@@ -7,26 +7,27 @@ const getOtherPlayerControlledBlob = require('../model/GameStateQueries.js').get
 const hasNonPCBlobDirectlyRight = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyRight;
 const hasNonPCBlobDirectlyLeft = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyLeft;
 
-function spawnPlayerControlledBlobs(gameState) {
-    //Immutable equivalent of array.push
-    gameState.Blobs = [...gameState.Blobs,
-        new Blob(3, 1, "#ff0000", true),
-        new Blob(4, 1, "#00ff00", true)
-    ];
-    return gameState;
-}
-
 function keyLeft(gameState) {
     return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
 }
+
 function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
+
+function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
+    if (! gameState.Blobs.some(b => b.isPlayerControlled === true)) {
+        //Immutable equivalent of array.push
+        gameState.Blobs = [...gameState.Blobs,
+            new Blob(3, 1, "#ff0000", true),
+            new Blob(4, 1, "#00ff00", true)
+        ];
+    }
+    return gameState;
+}
+
 function keyDown(gameState) {
     let newGameState = ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
-    if (! newGameState.Blobs.some(b => b.isPlayerControlled === true)) {
-        newGameState = spawnPlayerControlledBlobs(gameState)
-    }
     return newGameState;
 }
 
@@ -213,7 +214,7 @@ function isAtBottom(blob) {
 
 module.exports = {
     ProcessAnimationFrame,
-    spawnPlayerControlledBlobs,
+    spawnPlayerControlledBlobsIfNoPCBlobs,
     keyLeft,
     keyRight,
     keyDown,

@@ -13,7 +13,7 @@ npm install
 npm test
 ### Run the app
 npm start
-```
+
 
 ## Old Notes on the Game Engine:
 
@@ -33,8 +33,39 @@ Which result in changes to the game state
 
 I aspire to make GameState immutable - the Blobs Array _is_ immutable (and needs to be).
 
+## ToDo
+New blobs in finite colours.
+    Needs an idea of where randomness comes from.
+    Is it inside the game engine or outside?
+        Deterministic PRNG with state held in the game engine?
+        External source of randomness?
+        Random service available to the Game engine?
+Correct keyboard behaviour
+    No moving up.
+    PC blobs move down with ticks.
+    
+Correct falling behaviour
+    Separate spawn events from their previous event
+        but what triggers them? What triggers them?
+        I think the end of animation. If "animation is required" we don't process any more events
+        when animation is finished, trigger a check and respawn.
+            Probably check for Blobs to fall, then pop, then spawn (in that order)
+        Clock tick events could trigger them?
+            Kinda might mean variable time until next spawn
+    Well in the absence of any better ideas - let's try it.
+    
+    Non PC blobs should fall instantly (in game engine event terms)
+    leads nicely into?
+Animation of falling
+    Use "animate from" or "animate to" position on the blobs.
+    Some sort of event from the renderer when done.
+Ignore keyboard events if no PC blobs (ie still animating)
+Queue of Rock events needs to be processed before spawn events.
+Same colour "pop" events.
 
+Then onto two player land
 
+```
 Copyright 2019 Andrew Maddison
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,3 +79,5 @@ Copyright 2019 Andrew Maddison
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+```
