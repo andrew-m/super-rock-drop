@@ -173,14 +173,6 @@ function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
     }
 }
 
-function ProcessAnimationFrame(gameState) {
-    let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfShouldMoveDown);
-    let somethingMoved = mapResultsArray.some(result => result.didMove)
-
-    gameState.Blobs = mapResultsArray.map(r => r.Blob)
-    return {moved: somethingMoved, gameState: gameState};
-}
-
 function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
     let shouldStayStill =
         isAtBottom(blob)
@@ -195,12 +187,22 @@ function MoveDownOneSpaceIfShouldMoveDown(blob, index, array) {
 }
 
 function MoveBlobDown(blob) {
+    if (blob.oldy === undefined) {
+        blob.oldy = blob.y
+    }
+    if (blob.oldx === undefined) {
+        blob.oldx = blob.x
+    }
     blob.y += 1;
     return blob;
 }
 
 function moveBlobsThatShouldFallToRestingPosition(gameState) {
-    let result = ProcessAnimationFrame(gameState);
+    let mapResultsArray = gameState.Blobs.map(MoveDownOneSpaceIfShouldMoveDown);
+    let somethingMoved = mapResultsArray.some(result => result.didMove)
+
+    gameState.Blobs = mapResultsArray.map(r => r.Blob)
+    let result = {moved: somethingMoved, gameState: gameState};
     if (result.moved) {
         return moveBlobsThatShouldFallToRestingPosition(result.gameState)
     } else {
@@ -212,8 +214,11 @@ function isAtBottom(blob) {
     return (blob.y === 12)
 }
 
+function animationComplete(gameState) {
+    return new GameState(gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.requiresAnimation)))
+}
+
 module.exports = {
-    ProcessAnimationFrame,
     spawnPlayerControlledBlobsIfNoPCBlobs,
     keyLeft,
     keyRight,
@@ -222,5 +227,6 @@ module.exports = {
     keyRotate,
     moveBlobsThatShouldFallToRestingPosition,
     whereShouldIBeOnRotate,
-    pcBlobHasCrashedIntoOtherBlob
+    pcBlobHasCrashedIntoOtherBlob,
+    animationComplete
 }

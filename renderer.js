@@ -56,10 +56,11 @@ let timeAtLastTick = 0
 
 function AnimationLoop(timestamp, gameRenderer, gameState) {
     if (timestamp - timeAtLastTick > 1000) {
-        gameState = GameEngine.ProcessAnimationFrame(gameState).gameState
         timeAtLastTick = timestamp
     }
+
     gameRenderer.RenderGameState(gameState)
+
     return gameState
 }
 

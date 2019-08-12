@@ -9,7 +9,10 @@ describe('Game Engine On Clock Tick', function () {
 
     it('Should move all blobs down to the bottom', function () {
 
-        let newBlobArray = [new Blob(1, 1), new Blob(3, 1)];
+        let newBlobArray = [
+            new Blob(1, 1),
+            new Blob(3, 1)
+        ];
         let gameState = new GameState(newBlobArray)
 
         let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
@@ -59,6 +62,50 @@ describe('Game Engine On Clock Tick', function () {
         expect(newGameState.Blobs[1].x).to.equal(1)
         expect(newGameState.Blobs[1].y).to.equal(12)
     })
+})
+
+describe('Recording old positions for animation', function(){
+    it('When blobs fall, old position should be recorded', function () {
+        let newBlobArray = [
+            new Blob(1, 1),
+            new Blob(3, 4)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].oldx).to.equal(1)
+        expect(newGameState.Blobs[0].oldy).to.equal(1)
+
+        expect(newGameState.Blobs[1].x).to.equal(3)
+        expect(newGameState.Blobs[1].y).to.equal(12)
+        expect(newGameState.Blobs[1].oldx).to.equal(3)
+        expect(newGameState.Blobs[1].oldy).to.equal(4)
+    })
+
+    it('Recorded position should disappear on animation complete', function () {
+        let newBlobArray = [
+            new Blob(1, 1)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].oldx).to.equal(1)
+        expect(newGameState.Blobs[0].oldy).to.equal(1)
+
+        newGameState = gameEngine.animationComplete(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].oldx).to.equal(undefined)
+        expect(newGameState.Blobs[0].oldy).to.equal(undefined)
+    })
+
 })
 
 describe('On Move Keyboard Events', function () {
@@ -341,7 +388,7 @@ describe('On rotate crashes', function () {
     })
 })
 
-describe ('Should detect crashed blobs', function () {
+describe('Should detect crashed blobs', function () {
     it('Should return true if PC blob in same place as Non PC blob', function () {
         let newBlobArray = [
             new Blob(4, 9, "#AAFFAA", true),
@@ -398,7 +445,6 @@ describe('Spawn new player controlled blobs', function () {
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
     })
 })
-
 
 describe('Where should I be blob intended position calculator', function () {
     it('Should left horizontal blob nowhere', function () {
