@@ -85,7 +85,31 @@ describe('Recording old positions for animation', function(){
         expect(newGameState.Blobs[1].oldy).to.equal(4)
     })
 
-    it('Recorded position should disappear on animation complete', function () {
+    it('Recorded position and requires animation should disappear on animation complete', function () {
+        let newBlobArray = [
+            new Blob(1, 1)
+        ];
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+
+        expect(newGameState.Blobs.length).to.equal(1)
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].oldx).to.equal(1)
+        expect(newGameState.Blobs[0].oldy).to.equal(1)
+
+        newGameState = gameEngine.animationComplete(gameState)
+
+        expect(newGameState.Blobs[0].x).to.equal(1)
+        expect(newGameState.Blobs[0].y).to.equal(12)
+        expect(newGameState.Blobs[0].oldx).to.equal(undefined)
+        expect(newGameState.Blobs[0].oldy).to.equal(undefined)
+
+        expect(newGameState.needsAnimation).to.equal(false)
+    })
+
+    it('New PC blobs should spawn on animation complete', function () {
         let newBlobArray = [
             new Blob(1, 1)
         ];
@@ -104,6 +128,8 @@ describe('Recording old positions for animation', function(){
         expect(newGameState.Blobs[0].y).to.equal(12)
         expect(newGameState.Blobs[0].oldx).to.equal(undefined)
         expect(newGameState.Blobs[0].oldy).to.equal(undefined)
+        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[2].isPlayerControlled).to.equal(true)
     })
 
 })
@@ -133,7 +159,10 @@ describe('On Move Keyboard Events', function () {
     })
 
     it('Should move player controlled blobs down', function () {
-        let newBlobArray = [new Blob(3, 3, "#AAFFAA", true), new Blob(3, 6)]
+        let newBlobArray = [
+            new Blob(3, 3, "#AAFFAA", true),
+            new Blob(3, 12)
+        ]
         let gameState = new GameState(newBlobArray)
         gameState = gameEngine.keyDown(gameState)
 
@@ -141,7 +170,7 @@ describe('On Move Keyboard Events', function () {
         expect(gameState.Blobs[0].y).to.equal(4)
         expect(gameState.Blobs[0].isPlayerControlled).to.equal(true)
         expect(gameState.Blobs[1].x).to.equal(3)
-        expect(gameState.Blobs[1].y).to.equal(6)
+        expect(gameState.Blobs[1].y).to.equal(12)
     })
 })
 
@@ -340,7 +369,7 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
     })
 
-    it('Horizontal PC Blobs should crash and become non PC when they try to collide with non PC blobs below.', function () {
+    it('Horizontal PC Blobs should crash and become non PC when they try to collide with non PC blobs below. After which they will fall.', function () {
         let newBlobArray = [
             new Blob(3, 10, "#AAFFAA", true),
             new Blob(4, 10, "#FFAAAA", true),
@@ -357,13 +386,15 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].x).to.equal(4)
         expect(newGameState.Blobs[1].y).to.equal(11)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+        expect(newGameState.Blobs[2].x).to.equal(3)
+        expect(newGameState.Blobs[2].y).to.equal(12)
 
         newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the blob
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(11)
         expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
         expect(newGameState.Blobs[1].x).to.equal(4)
-        expect(newGameState.Blobs[1].y).to.equal(11)
+        expect(newGameState.Blobs[1].y).to.equal(12)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
     })
 })
@@ -411,38 +442,36 @@ describe('Should detect crashed blobs', function () {
 
 describe('Spawn new player controlled blobs', function () {
     it('Should populate with PC blobs on demand at the middle of the top row', function () {
-        let newBlobArray = [] //noblobs
-        let gameState = new GameState(newBlobArray)
+        let blobArray = [] //noblobs
 
-        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newBlobArray = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(blobArray)
 
-        expect(newGameState.Blobs.length).to.equal(2)
+        expect(newBlobArray.length).to.equal(2)
 
-        expect(newGameState.Blobs[0].x).to.equal(3)
-        expect(newGameState.Blobs[0].y).to.equal(1)
-        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
-        expect(newGameState.Blobs[1].x).to.equal(4)
-        expect(newGameState.Blobs[1].y).to.equal(1)
-        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+        expect(newBlobArray[0].x).to.equal(3)
+        expect(newBlobArray[0].y).to.equal(1)
+        expect(newBlobArray[0].isPlayerControlled).to.equal(true)
+        expect(newBlobArray[1].x).to.equal(4)
+        expect(newBlobArray[1].y).to.equal(1)
+        expect(newBlobArray[1].isPlayerControlled).to.equal(true)
     })
 
     it('Should not populate with PC blobs if existing PC blobs', function () {
-        let newBlobArray = [
+        let blobArray = [
             new Blob(4, 9, "#AAFFAA", true),
             new Blob(4, 10, "#FFAAAA", true)
         ]
-        let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newBlobArray = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(blobArray)
 
-        expect(newGameState.Blobs.length).to.equal(2)
+        expect(newBlobArray.length).to.equal(2)
 
-        expect(newGameState.Blobs[0].x).to.equal(4)
-        expect(newGameState.Blobs[0].y).to.equal(9)
-        expect(newGameState.Blobs[0].isPlayerControlled).to.equal(true)
-        expect(newGameState.Blobs[1].x).to.equal(4)
-        expect(newGameState.Blobs[1].y).to.equal(10)
-        expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
+        expect(newBlobArray[0].x).to.equal(4)
+        expect(newBlobArray[0].y).to.equal(9)
+        expect(newBlobArray[0].isPlayerControlled).to.equal(true)
+        expect(newBlobArray[1].x).to.equal(4)
+        expect(newBlobArray[1].y).to.equal(10)
+        expect(newBlobArray[1].isPlayerControlled).to.equal(true)
     })
 })
 

@@ -2,6 +2,8 @@ let Blob = require ('./model/Blob.js').Blob;
 let GameState = require('./model/GameState.js').GameState;
 const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
 let GameEngine = require('./model/GameEngine');
+let AnimationEngine = require('./model/AnimationEngine');
+
 // let GameEngineController = require('./model/GameEngineController.js');
 let KeyboardInput = require("./model/KeyboardInput.js").KeyboardInput
 let keyRegistration = require("./model/KeyboardInput.js").keyRegistration
@@ -19,10 +21,10 @@ const setup = function (doc) {
     canvasGameRenderer.Setup();
 
     let newBlobArray = [
-        new Blob(1, 12, '#ff0000'),
+        new Blob(1, 1, '#ff0000'),
         new Blob(1, 11, '#ff0000'),
         new Blob(6, 12, '#00ff00'),
-        new Blob(3, 11, '#ff00ff'),
+        new Blob(3, 4, '#ff00ff'),
         new Blob(3, 12, '#0000ff'),
         new Blob(3, 1, '#AAFFAA', true),
         new Blob(4, 1, '#AAAAFF', true)];
@@ -57,6 +59,9 @@ let timeAtLastTick = 0
 function AnimationLoop(timestamp, gameRenderer, gameState) {
     if (timestamp - timeAtLastTick > 1000) {
         timeAtLastTick = timestamp
+    }
+    if (gameState.needsAnimation) {
+        gameState = AnimationEngine.calculateAnimationPosition(gameState, GameEngine.animationComplete)
     }
 
     gameRenderer.RenderGameState(gameState)

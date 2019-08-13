@@ -15,20 +15,21 @@ function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 
-function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
-    if (! gameState.Blobs.some(b => b.isPlayerControlled === true)) {
+function spawnPlayerControlledBlobsIfNoPCBlobs(blobArray) {
+    if (! blobArray.some(b => b.isPlayerControlled === true)) {
         //Immutable equivalent of array.push
-        gameState.Blobs = [...gameState.Blobs,
+        let newBlobArray = [...blobArray,
             new Blob(3, 1, "#ff0000", true),
             new Blob(4, 1, "#00ff00", true)
         ];
+        return newBlobArray
     }
-    return gameState;
+    return blobArray;
 }
 
 function keyDown(gameState) {
     let newGameState = ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
-    return newGameState;
+    return moveBlobsThatShouldFallToRestingPosition(newGameState)
 }
 
 function keyUp(gameState) {
@@ -204,6 +205,7 @@ function moveBlobsThatShouldFallToRestingPosition(gameState) {
     gameState.Blobs = mapResultsArray.map(r => r.Blob)
     let result = {moved: somethingMoved, gameState: gameState};
     if (result.moved) {
+        // gameState.needsAnimation = true
         return moveBlobsThatShouldFallToRestingPosition(result.gameState)
     } else {
         return result.gameState
@@ -215,7 +217,15 @@ function isAtBottom(blob) {
 }
 
 function animationComplete(gameState) {
-    return new GameState(gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.requiresAnimation)))
+    let blobsWithoutOldPositions = gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.requiresAnimation));
+
+    let newBlobArrayWithSpawn = spawnPlayerControlledBlobsIfNoPCBlobs(blobsWithoutOldPositions);
+
+    let gameState1 = new GameState(
+        newBlobArrayWithSpawn,
+        false
+    );
+    return gameState1
 }
 
 module.exports = {
