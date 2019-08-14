@@ -12,7 +12,7 @@ const Blob = require('../model/Blob.js').Blob;
 
 describe('Game Engine On Clock Tick', function () {
 
-    it('Should oldy by one fith of a square', function () {
+    it('Should move oldy by one fith of a square', function () {
         let newBlobArray = [
             new Blob(1, 12, "#ff0000", false, false, 1, 1)
         ];
@@ -25,6 +25,17 @@ describe('Game Engine On Clock Tick', function () {
 
         expect(newGameState.Blobs[0].oldx).to.equal(1)
         expect(newGameState.Blobs[0].oldy).to.equal(1.2)
+    })
+
+    it('Should not remove needs animation flag when animation is not complete', function (){
+        let newBlobArray = [
+            new Blob(1, 12, "#ff0000", false, false, 1, 1)
+        ];
+
+        let gameState = new GameState(newBlobArray, true)
+        let newGameState = animationEngine.calculateAnimationPosition(gameState, )
+
+        expect(newGameState.needsAnimation).to.equal(true)
     })
 
 
@@ -58,13 +69,14 @@ describe('Game Engine On Clock Tick', function () {
             return gameState
         }
 
-        let gameState = new GameState(newBlobArray)
+        let gameState = new GameState(newBlobArray, true)
 
         let newGameState = animationEngine.calculateAnimationPosition(gameState)
 
         expect(newGameState.Blobs[0].oldy).to.equal(12)
         expect(newGameState.Blobs[1].oldy).to.almost.equal(11.8)
         expect(wasCalled).to.equal(false)
+        expect(newGameState.needsAnimation).to.equal(true)
     })
 
     it('Should call provided callback when reached proper position', function () {

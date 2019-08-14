@@ -98,6 +98,7 @@ describe('Recording old positions for animation', function(){
         expect(newGameState.Blobs[0].y).to.equal(12)
         expect(newGameState.Blobs[0].oldx).to.equal(1)
         expect(newGameState.Blobs[0].oldy).to.equal(1)
+        expect(newGameState.needsAnimation).to.equal(true)
 
         newGameState = gameEngine.animationComplete(gameState)
 

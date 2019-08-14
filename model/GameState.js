@@ -1,7 +1,7 @@
 class GameState {
     constructor(blobs = [], needsAnimation = false) {
         this.Blobs = blobs
-        this.needsAnimation = false
+        this.needsAnimation = needsAnimation
     }
 }
 

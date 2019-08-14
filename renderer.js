@@ -12,7 +12,6 @@ let canvasGameRenderer
 
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
-        console.log("doc is null :(");
         return;
     }
 
@@ -59,8 +58,13 @@ let timeAtLastTick = 0
 function AnimationLoop(timestamp, gameRenderer, gameState) {
     if (timestamp - timeAtLastTick > 1000) {
         timeAtLastTick = timestamp
+        gameState = GameEngine.keyDown(gameState)
     }
+    //todo if blobs crash, but don't need to fall, they don't respawn
+    // (probably something to do with the animation being complete on arrival)
+
     if (gameState.needsAnimation) {
+        console.log("Needs Animation")
         gameState = AnimationEngine.calculateAnimationPosition(gameState, GameEngine.animationComplete)
     }
 

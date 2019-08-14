@@ -19,19 +19,33 @@ class CanvasGameRenderer {
 
     RenderGameState(gameState){
         this.clearWholeGameArea()
+
+        function drawBlob(colour, gridPositionX, gridPositionY, needsBorder, borderColour) {
+            this.context.fillStyle = colour
+            let res = this.CalculatePositionWidthAndHeight(gridPositionX, gridPositionY, this.gridWidth, this.gridHeight, this.width, this.height);
+            this.context.beginPath();
+
+            this.context.arc(res.x, res.y, res.width * 0.47, 0, 2 * Math.PI);
+            this.context.fill();
+            if (needsBorder) {
+                this.context.strokeStyle = borderColour;
+                this.context.lineWidth = 2
+                this.context.stroke();
+            }
+        }
+
         gameState.Blobs.forEach(
             blob => {
-                this.context.fillStyle = blob.colour
-                let res = this.CalculatePositionWidthAndHeight(blob.x, blob.y, this.gridWidth, this.gridHeight, this.width, this.height);
+                let gridPositionX = blob.x;
+                let gridPositionY = blob.y;
+                let colour = blob.colour;
+                let needsBorder = blob.isPlayerControlled;
+                let borderColour = "#303030";
 
-                this.context.beginPath();
-                this.context.arc(res.x, res.y, res.width * 0.47, 0, 2 * Math.PI);
-                this.context.fill();
-
-                if (blob.isPlayerControlled) {
-                    this.context.strokeStyle = "#303030";
-                    this.context.lineWidth = 2
-                    this.context.stroke();
+                if (blob.oldy !== undefined){
+                    drawBlob.call(this, colour, blob.oldx, blob.oldy, true, "#aaaaaa");
+                } else {
+                    drawBlob.call(this, colour, gridPositionX, gridPositionY, needsBorder, borderColour);
                 }
             }
         )

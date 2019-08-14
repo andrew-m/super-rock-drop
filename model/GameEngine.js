@@ -205,7 +205,7 @@ function moveBlobsThatShouldFallToRestingPosition(gameState) {
     gameState.Blobs = mapResultsArray.map(r => r.Blob)
     let result = {moved: somethingMoved, gameState: gameState};
     if (result.moved) {
-        // gameState.needsAnimation = true
+        gameState.needsAnimation = true
         return moveBlobsThatShouldFallToRestingPosition(result.gameState)
     } else {
         return result.gameState
@@ -218,7 +218,6 @@ function isAtBottom(blob) {
 
 function animationComplete(gameState) {
     let blobsWithoutOldPositions = gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.requiresAnimation));
-
     let newBlobArrayWithSpawn = spawnPlayerControlledBlobsIfNoPCBlobs(blobsWithoutOldPositions);
 
     let gameState1 = new GameState(
