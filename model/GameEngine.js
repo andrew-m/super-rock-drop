@@ -32,10 +32,6 @@ function keyDown(gameState) {
     return moveBlobsThatShouldFallToRestingPosition(newGameState)
 }
 
-function keyUp(gameState) {
-    return ifPlayerControlled(moveUp, gameState);
-}
-
 function areInTheSamePlace(c, b) {
     return (c.x === b.x && c.y === b.y);
 }
@@ -155,11 +151,6 @@ function moveRightIfNotAtEdge(blob, gameState) {
     }
 }
 
-function moveUp(blob) {
-    blob.y -= 1 //coords (1,1) start at top left apparently.
-    return blob
-}
-
 function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
     function shouldCrashInMyOwnRight(blob1, allBlobs) {
         return isAtBottom(blob1) || hasNonPCBlobDirectlyBelow(blob1, allBlobs);
@@ -236,7 +227,6 @@ module.exports = {
     keyLeft,
     keyRight,
     keyDown,
-    keyUp,
     keyRotate,
     moveBlobsThatShouldFallToRestingPosition,
     whereShouldIBeOnRotate,

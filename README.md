@@ -40,11 +40,9 @@ New blobs in finite colours.
         Deterministic PRNG with state held in the game engine?
         External source of randomness?
         Random service available to the Game engine?
-Correct keyboard behaviour
-    No moving up.
-    PC blobs move down with ticks.
-    
-Correct falling behaviour
+
+Have key for falling all the way intentionally (ie - drop down)
+Perhaps space becomes drop, up becomes rotate?
     
 Ignore keyboard events if no PC blobs (ie still animating)
 Queue of Rock events needs to be processed before spawn events.

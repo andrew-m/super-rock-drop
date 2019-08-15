@@ -40,7 +40,6 @@ const setup = function (doc) {
             true,
             50
         ),
-        new keyRegistration("Semicolon", () => gameState = GameEngine.keyUp(gameState)),
         new keyRegistration("Space", () => gameState = GameEngine.keyRotate(gameState))
     ]
 
