@@ -14,7 +14,7 @@ describe('Game Engine On Clock Tick', function () {
 
     it('Should move oldy by one fith of a square', function () {
         let newBlobArray = [
-            new Blob(1, 12, "#ff0000", false, false, 1, 1)
+            new Blob(1, 12, "#ff0000", false, 1, 1)
         ];
         let gameState = new GameState(newBlobArray)
 
@@ -29,7 +29,7 @@ describe('Game Engine On Clock Tick', function () {
 
     it('Should not remove needs animation flag when animation is not complete', function (){
         let newBlobArray = [
-            new Blob(1, 12, "#ff0000", false, false, 1, 1)
+            new Blob(1, 12, "#ff0000", false, 1, 1)
         ];
 
         let gameState = new GameState(newBlobArray, true)
@@ -41,8 +41,8 @@ describe('Game Engine On Clock Tick', function () {
 
     it('Should stop changing oldy when reaches y', function () {
         let newBlobArray = [
-            new Blob(1, 12, "#ff0000", false, false, 1, 11.8),
-            new Blob(2, 12, "#ff0000", false, false, 2, 11.6)
+            new Blob(1, 12, "#ff0000", false, 1, 11.8),
+            new Blob(2, 12, "#ff0000", false, 2, 11.6)
         ];
         let gameState = new GameState(newBlobArray)
 
@@ -59,8 +59,8 @@ describe('Game Engine On Clock Tick', function () {
 
     it('Should not call callback until all blobs arrived', function () {
         let newBlobArray = [
-            new Blob(1, 12, "#ff0000", false, false, 1, 11.8),
-            new Blob(2, 12, "#ff0000", false, false, 1, 11.6)
+            new Blob(1, 12, "#ff0000", false, 1, 11.8),
+            new Blob(2, 12, "#ff0000", false, 1, 11.6)
         ];
 
         let wasCalled = false
@@ -81,7 +81,7 @@ describe('Game Engine On Clock Tick', function () {
 
     it('Should call provided callback when reached proper position', function () {
         let newBlobArray = [
-            new Blob(1, 12, "#ff0000", false, false, 1, 12)
+            new Blob(1, 12, "#ff0000", false, 1, 12)
         ];
         let wasCalled = false
 

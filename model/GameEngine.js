@@ -221,7 +221,7 @@ function isAtBottom(blob) {
 }
 
 function animationComplete(gameState) {
-    let blobsWithoutOldPositions = gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.requiresAnimation));
+    let blobsWithoutOldPositions = gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled));
     let newBlobArrayWithSpawn = spawnPlayerControlledBlobsIfNoPCBlobs(blobsWithoutOldPositions);
 
     let gameState1 = new GameState(
