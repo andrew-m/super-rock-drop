@@ -45,20 +45,7 @@ Correct keyboard behaviour
     PC blobs move down with ticks.
     
 Correct falling behaviour
-    Separate spawn events from their previous event
-        but what triggers them? What triggers them?
-        I think the end of animation. If "animation is required" we don't process any more events
-        when animation is finished, trigger a check and respawn.
-            Probably check for Blobs to fall, then pop, then spawn (in that order)
-        Clock tick events could trigger them?
-            Kinda might mean variable time until next spawn
-    Well in the absence of any better ideas - let's try it.
     
-    Non PC blobs should fall instantly (in game engine event terms)
-    leads nicely into?
-Animation of falling
-    Use "animate from" or "animate to" position on the blobs.
-    Some sort of event from the renderer when done.
 Ignore keyboard events if no PC blobs (ie still animating)
 Queue of Rock events needs to be processed before spawn events.
 Same colour "pop" events.

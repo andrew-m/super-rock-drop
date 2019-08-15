@@ -369,6 +369,19 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].y).to.equal(11)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(false)
     })
+    it('Vertical PC Blobs should crash and become non PC when they try to collide with non PC blobs below.', function () {
+        let newBlobArray = [
+            new Blob(3, 10, "#AAFFAA", true),
+            new Blob(3, 11, "#FFAAAA", true),
+            new Blob(3, 12, "#AAAAFF", false)
+        ];
+
+        let gameState = new GameState(newBlobArray)
+
+        let newGameState = gameEngine.keyDown(gameState) //crash
+
+        expect(newGameState.needsAnimation).to.equal(true)
+    })
 
     it('Horizontal PC Blobs should crash and become non PC when they try to collide with non PC blobs below. After which they will fall.', function () {
         let newBlobArray = [

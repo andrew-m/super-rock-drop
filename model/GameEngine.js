@@ -168,6 +168,10 @@ function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
     let otherPCBlob = getOtherPlayerControlledBlob(blob, gameState.Blobs);
     let otherPcBlobExistsAndShouldCrash = otherPCBlob !== undefined && shouldCrashInMyOwnRight(otherPCBlob, gameState.Blobs)
     if (shouldCrashInMyOwnRight(blob, gameState.Blobs) || otherPcBlobExistsAndShouldCrash){
+        gameState.needsAnimation = true
+        //todo stop mutating game state.
+        //Probably requires ifPlayerControl to be refactored
+        //(currently acts on blob array but returns gamestate)
         return new Blob(blob.x, blob.y, blob.colour, false)
     } else {
         return new Blob(blob.x, blob.y +1, blob.colour, blob.isPlayerControlled)

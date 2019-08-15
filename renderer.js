@@ -60,8 +60,6 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
         timeAtLastTick = timestamp
         gameState = GameEngine.keyDown(gameState)
     }
-    //todo if blobs crash, but don't need to fall, they don't respawn
-    // (probably something to do with the animation being complete on arrival)
 
     if (gameState.needsAnimation) {
         console.log("Needs Animation")
