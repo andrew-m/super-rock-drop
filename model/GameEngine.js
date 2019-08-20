@@ -1,5 +1,7 @@
 
 const GameState = require('../model/GameState.js').GameState;
+const primeNextColour = require('../model/GameState.js').primeNextColour;
+const colours = require('../model/GameState.js').colours;
 
 const Blob = require('../model/Blob.js').Blob;
 const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
@@ -15,16 +17,18 @@ function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 
-function spawnPlayerControlledBlobsIfNoPCBlobs(blobArray) {
-    if (! blobArray.some(b => b.isPlayerControlled === true)) {
+function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
+    let newBlobArray = gameState.Blobs
+    if (! gameState.Blobs.some(b => b.isPlayerControlled === true)) {
         //Immutable equivalent of array.push
-        let newBlobArray = [...blobArray,
-            new Blob(3, 1, "#ff0000", true),
-            new Blob(4, 1, "#00ff00", true)
+        newBlobArray = [...gameState.Blobs,
+            new Blob(3, 1, gameState.nextColours[0], true),
+            new Blob(4, 1, gameState.nextColours[1], true)
         ];
-        return newBlobArray
     }
-    return blobArray;
+    console.log()
+    // GameState.pri
+    return new GameState(newBlobArray, gameState.needsAnimation, []);
 }
 
 function keyDown(gameState) {
@@ -212,12 +216,13 @@ function isAtBottom(blob) {
 }
 
 function animationComplete(gameState) {
-    let blobsWithoutOldPositions = gameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled));
-    let newBlobArrayWithSpawn = spawnPlayerControlledBlobsIfNoPCBlobs(blobsWithoutOldPositions);
+    let newGameState = spawnPlayerControlledBlobsIfNoPCBlobs(gameState);
+    let blobsWithoutOldPositions = newGameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled));
 
     let gameState1 = new GameState(
-        newBlobArrayWithSpawn,
-        false
+        blobsWithoutOldPositions,
+        false,
+        newGameState.nextColours
     );
     return gameState1
 }

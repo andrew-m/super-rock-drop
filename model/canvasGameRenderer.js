@@ -42,10 +42,10 @@ class CanvasGameRenderer {
                 let needsBorder = blob.isPlayerControlled;
                 let borderColour = "#303030";
 
-                if (blob.oldy !== undefined){
-                    drawBlob.call(this, colour, blob.oldx, blob.oldy, true, "#aaaaaa");
-                } else {
+                if (blob.oldy === undefined) {
                     drawBlob.call(this, colour, gridPositionX, gridPositionY, needsBorder, borderColour);
+                } else {
+                    drawBlob.call(this, colour, blob.oldx, blob.oldy, true, "#aaaaaa");
                 }
             }
         )

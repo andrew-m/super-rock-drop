@@ -1,5 +1,5 @@
-let Blob = require ('./model/Blob.js').Blob;
 let GameState = require('./model/GameState.js').GameState;
+let primeNextColour = require('./model/GameState.js').primeNextColour;
 const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
 let GameEngine = require('./model/GameEngine');
 let AnimationEngine = require('./model/AnimationEngine');
@@ -20,15 +20,19 @@ const setup = function (doc) {
     canvasGameRenderer.Setup();
 
     let newBlobArray = [
-        new Blob(1, 1, '#ff0000'),
-        new Blob(1, 11, '#ff0000'),
-        new Blob(6, 12, '#00ff00'),
-        new Blob(3, 4, '#ff00ff'),
-        new Blob(3, 12, '#0000ff'),
-        new Blob(3, 1, '#AAFFAA', true),
-        new Blob(4, 1, '#AAAAFF', true)];
+        // new Blob(1, 1, '#ff0000'),
+        // new Blob(1, 11, '#ff0000'),
+        // new Blob(6, 12, '#00ff00'),
+        // new Blob(3, 4, '#ff00ff'),
+        // new Blob(3, 12, '#0000ff'),
+        // new Blob(3, 1, '#AAFFAA', true),
+        // new Blob(4, 1, '#AAAAFF', true)
+    ];
 
-    gameState = new GameState(newBlobArray)
+    gameState = new GameState(newBlobArray, true)
+    gameState = primeNextColour(gameState)
+    console.log("Primed^^^")
+    console.log(JSON.stringify(gameState))
     canvasGameRenderer.RenderGameState(gameState)
 
     let keys = [
@@ -61,8 +65,8 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
     }
 
     if (gameState.needsAnimation) {
-        console.log("Needs Animation")
         gameState = AnimationEngine.calculateAnimationPosition(gameState, GameEngine.animationComplete)
+        gameState = primeNextColour(gameState)
     }
 
     gameRenderer.RenderGameState(gameState)

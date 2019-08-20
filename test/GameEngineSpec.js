@@ -3,6 +3,8 @@ const {expect} = require('chai')
 const assert = require('assert');
 const gameEngine = require('../model/GameEngine.js');
 let GameState = require('../model/GameState.js').GameState;
+let primeNextColour = require('../model/GameState.js').primeNextColour;
+let GameStateColours = require('../model/GameState.js').colours;
 const Blob = require('../model/Blob.js').Blob;
 
 describe('Game Engine On Clock Tick', function () {
@@ -457,9 +459,10 @@ describe('Should detect crashed blobs', function () {
 describe('Spawn new player controlled blobs', function () {
     it('Should populate with PC blobs on demand at the middle of the top row', function () {
         let blobArray = [] //noblobs
+        let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
 
-        let newBlobArray = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(blobArray)
-
+        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newBlobArray = newGameState.Blobs
         expect(newBlobArray.length).to.equal(2)
 
         expect(newBlobArray[0].x).to.equal(3)
@@ -470,13 +473,26 @@ describe('Spawn new player controlled blobs', function () {
         expect(newBlobArray[1].isPlayerControlled).to.equal(true)
     })
 
+    it('Should populate with PC blobs using next colours from gameState', function () {
+        let blobArray = [] //noblobs
+        let gameState = new GameState(blobArray, false, [GameStateColours[0], GameStateColours[3]])
+
+        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+
+        expect(newGameState.Blobs.length).to.equal(2)
+
+        expect(newGameState.Blobs[0].colour).to.equal(GameStateColours[0])
+        expect(newGameState.Blobs[1].colour).to.equal(GameStateColours[3])
+    })
+
     it('Should not populate with PC blobs if existing PC blobs', function () {
         let blobArray = [
             new Blob(4, 9, "#AAFFAA", true),
             new Blob(4, 10, "#FFAAAA", true)
         ]
+        let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
 
-        let newBlobArray = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(blobArray)
+        let newBlobArray = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState).Blobs
 
         expect(newBlobArray.length).to.equal(2)
 
@@ -528,5 +544,13 @@ describe('Where should I be blob intended position calculator', function () {
 
         expect(newPositionedBlob.x).to.equal(3)
         expect(newPositionedBlob.y).to.equal(8)
+    })
+})
+
+describe('blah', function () {
+    it('GameStateShouldGenerateRandomColours', function () {
+        let gameState = new GameState([], false, [])
+        let newGameState = primeNextColour(gameState);
+        expect(newGameState.nextColours[0] !== undefined).to.equal(true)
     })
 })
