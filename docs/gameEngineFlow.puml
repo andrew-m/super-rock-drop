@@ -1,0 +1,23 @@
+@startuml
+partition renderer {
+(*)  --> "Wait For Event"
+}
+partition blah {
+--> [Keypress] "Move PC blobs"
+If "crashed?" then
+-right->[NO] "Wait For Event"
+else
+-->[YES] "Make PC blobs non PC"
+--> "Blobs Fall"
+--> Animate Fall
+    If "Blobs sets of 4?" then
+    -->[NO] "Spawn new Blobs"
+    --> "Wait For Event"
+    else
+    -->[YES] "Pop connecting blobs"
+    -left-> "Animate pops"
+    -right-> "Blobs Fall"
+    endif
+endif
+}
+@enduml
