@@ -1,0 +1,8 @@
+@startuml
+r as "Renderer" -> ge as "Game Engine" : Keyboard Event
+ge -> r : GameState Needs Animation
+r -> c as "Canvas Renderer" : Render Animation + callback
+c -> ge : Callback - Animation completed
+ge -> c : gamestate
+c -> r : gamestate
+@enduml
