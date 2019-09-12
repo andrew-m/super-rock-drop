@@ -4,7 +4,6 @@ const assert = require('assert');
 const gameEngine = require('../model/GameEngine.js');
 let GameState = require('../model/GameState.js').GameState;
 let primeNextColour = require('../model/GameState.js').primeNextColour;
-let GameStateColours = require('../model/GameState.js').colours;
 const Blob = require('../model/Blob.js').Blob;
 
 describe('Game Engine On Clock Tick', function () {
@@ -475,14 +474,14 @@ describe('Spawn new player controlled blobs', function () {
 
     it('Should populate with PC blobs using next colours from gameState', function () {
         let blobArray = [] //noblobs
-        let gameState = new GameState(blobArray, false, [GameStateColours[0], GameStateColours[3]])
+        let gameState = new GameState(blobArray, false, [0, 3])
 
         let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
 
         expect(newGameState.Blobs.length).to.equal(2)
 
-        expect(newGameState.Blobs[0].colour).to.equal(GameStateColours[0])
-        expect(newGameState.Blobs[1].colour).to.equal(GameStateColours[3])
+        expect(newGameState.Blobs[0].colour).to.equal(0)
+        expect(newGameState.Blobs[1].colour).to.equal(3)
     })
 
     it('Should not populate with PC blobs if existing PC blobs', function () {

@@ -1,7 +1,6 @@
 
 const GameState = require('../model/GameState.js').GameState;
 const primeNextColour = require('../model/GameState.js').primeNextColour;
-const colours = require('../model/GameState.js').colours;
 
 const Blob = require('../model/Blob.js').Blob;
 const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
@@ -164,9 +163,6 @@ function moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash(blob, gameState) {
     let otherPcBlobExistsAndShouldCrash = otherPCBlob !== undefined && shouldCrashInMyOwnRight(otherPCBlob, gameState.Blobs)
     if (shouldCrashInMyOwnRight(blob, gameState.Blobs) || otherPcBlobExistsAndShouldCrash){
         gameState.needsAnimation = true
-        //todo stop mutating game state.
-        //Probably requires ifPlayerControl to be refactored
-        //(currently acts on blob array but returns gamestate)
         return new Blob(blob.x, blob.y, blob.colour, false)
     } else {
         return new Blob(blob.x, blob.y +1, blob.colour, blob.isPlayerControlled)

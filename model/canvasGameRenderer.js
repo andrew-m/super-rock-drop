@@ -38,14 +38,14 @@ class CanvasGameRenderer {
             blob => {
                 let gridPositionX = blob.x;
                 let gridPositionY = blob.y;
-                let colour = blob.colour;
+                let colourIndex = blob.colour;
                 let needsBorder = blob.isPlayerControlled;
                 let borderColour = "#303030";
 
                 if (blob.oldy === undefined) {
-                    drawBlob.call(this, colour, gridPositionX, gridPositionY, needsBorder, borderColour);
+                    drawBlob.call(this, gameState.colourMap[colourIndex], gridPositionX, gridPositionY, needsBorder, borderColour);
                 } else {
-                    drawBlob.call(this, colour, blob.oldx, blob.oldy, true, "#aaaaaa");
+                    drawBlob.call(this, gameState.colourMap[colourIndex], blob.oldx, blob.oldy, true, "#aaaaaa");
                 }
             }
         )

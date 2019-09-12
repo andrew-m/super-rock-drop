@@ -3,17 +3,21 @@ class GameState {
         this.Blobs = blobs
         this.needsAnimation = needsAnimation
         this.nextColours = nextColours
+        this.colourMap = colourMap
+    }
+
+    withBlobs(blobs) {
+        return null
     }
 }
 
-const colours = [
-    "#cc0000",
+const colourMap = ["#cc0000",
     "#00cc00",
-    // "#2020cc",
+    "#2020cc",
     "#00aaaa",
     "#aa00ff",
-    // "#aaaa00",
 ]
+
 
 function primeNextColour(gameState) {
     function getRndInteger(min, max) {
@@ -21,8 +25,8 @@ function primeNextColour(gameState) {
     }
 
     let colourArray = [
-        colours[getRndInteger(0, colours.length -1)],
-        colours[getRndInteger(0, colours.length -1)]
+        getRndInteger(0, colourMap.length -1),
+        getRndInteger(0, colourMap.length -1)
     ]
     console.log("Colour Array: " + JSON.stringify(colourArray))
     return new GameState(gameState.Blobs, gameState.needsAnimation, colourArray)
@@ -30,6 +34,5 @@ function primeNextColour(gameState) {
 
 module.exports = {
     GameState,
-    colours,
     primeNextColour
 }
