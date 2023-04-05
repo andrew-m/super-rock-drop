@@ -1,4 +1,7 @@
 node_modules
 
 .idea/
+.vscode/
 electron-quick-start.iml
+
+.DS_Store
