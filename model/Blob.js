@@ -9,4 +9,4 @@ class Blob {
     }
 }
 
-module.exports = { Blob }
+export { Blob }

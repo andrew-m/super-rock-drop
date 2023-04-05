@@ -1,12 +1,15 @@
 
-const GameState = require('../model/GameState.js').GameState;
-const primeNextColour = require('../model/GameState.js').primeNextColour;
+// const GameState = require('../model/GameState.js').GameState;
+import {GameState, primeNextColour} from '../model/GameState.js';
+// const primeNextColour = require('../model/GameState.js').primeNextColour;
 
-const Blob = require('../model/Blob.js').Blob;
-const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
-const getOtherPlayerControlledBlob = require('../model/GameStateQueries.js').getOtherPlayerControlledBlob;
-const hasNonPCBlobDirectlyRight = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyRight;
-const hasNonPCBlobDirectlyLeft = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyLeft;
+// const Blob = require('../model/Blob.js').Blob;
+import {Blob} from '../model/Blob.js';
+// const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
+// const getOtherPlayerControlledBlob = require('../model/GameStateQueries.js').getOtherPlayerControlledBlob;
+// const hasNonPCBlobDirectlyRight = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyRight;
+// const hasNonPCBlobDirectlyLeft = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyLeft;
+import {hasNonPCBlobDirectlyBelow, getOtherPlayerControlledBlob, hasNonPCBlobDirectlyRight, hasNonPCBlobDirectlyLeft} from '../model/GameStateQueries.js';
 
 function keyLeft(gameState) {
     return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
@@ -223,7 +226,7 @@ function animationComplete(gameState) {
     return gameState1
 }
 
-module.exports = {
+export {
     spawnPlayerControlledBlobsIfNoPCBlobs,
     keyLeft,
     keyRight,

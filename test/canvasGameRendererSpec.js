@@ -1,8 +1,7 @@
-require('mocha')
-const { expect } = require('chai')
-const assert = require('assert');
-const CanvasGameRenderer = require('../model/canvasGameRenderer').CanvasGameRenderer;
-const Blob = require('../model/Blob')
+import 'mocha';
+import {expect} from 'chai';
+
+import {CanvasGameRenderer} from '../model/canvasGameRenderer.js';
 
 describe('Game Renderer for HTML canvas', function() {
 

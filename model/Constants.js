@@ -4,4 +4,4 @@ const grid = {
     height:12
 }
 
-module.exports = { grid }
+export { grid }

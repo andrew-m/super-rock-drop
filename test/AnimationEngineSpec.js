@@ -1,14 +1,12 @@
-require('mocha')
-const {expect} = require('chai')
+import 'mocha';
+import {use, expect} from 'chai';
 
-const chai = require('chai')
+import chaiAlmost from 'chai-almost';
+use(chaiAlmost());
 
-const chaiAlmost = require('chai-almost');
-chai.use(chaiAlmost());
-const assert = require('assert');
-const animationEngine = require('../model/AnimationEngine.js');
-let GameState = require('../model/GameState.js').GameState;
-const Blob = require('../model/Blob.js').Blob;
+import {calculateAnimationPosition} from '../model/AnimationEngine.js';
+import {GameState} from '../model/GameState.js';
+import {Blob} from '../model/Blob.js';
 
 describe('Game Engine On Clock Tick', function () {
 
@@ -18,7 +16,7 @@ describe('Game Engine On Clock Tick', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = animationEngine.calculateAnimationPosition(gameState)
+        let newGameState = calculateAnimationPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -33,7 +31,7 @@ describe('Game Engine On Clock Tick', function () {
         ];
 
         let gameState = new GameState(newBlobArray, true)
-        let newGameState = animationEngine.calculateAnimationPosition(gameState, )
+        let newGameState = calculateAnimationPosition(gameState, )
 
         expect(newGameState.needsAnimation).to.equal(true)
     })
@@ -46,12 +44,12 @@ describe('Game Engine On Clock Tick', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = animationEngine.calculateAnimationPosition(gameState, gameState => gameState)
+        let newGameState = calculateAnimationPosition(gameState, gameState => gameState)
 
         expect(newGameState.Blobs[0].oldy).to.equal(12)
         expect(newGameState.Blobs[1].oldy).to.almost.equal(11.8)
 
-        newGameState = animationEngine.calculateAnimationPosition(newGameState, gameState => gameState)
+        newGameState = calculateAnimationPosition(newGameState, gameState => gameState)
 
         expect(newGameState.Blobs[0].oldy).to.equal(12)
         expect(newGameState.Blobs[1].oldy).to.almost.equal(12)
@@ -71,7 +69,7 @@ describe('Game Engine On Clock Tick', function () {
 
         let gameState = new GameState(newBlobArray, true)
 
-        let newGameState = animationEngine.calculateAnimationPosition(gameState)
+        let newGameState = calculateAnimationPosition(gameState)
 
         expect(newGameState.Blobs[0].oldy).to.equal(12)
         expect(newGameState.Blobs[1].oldy).to.almost.equal(11.8)
@@ -97,7 +95,7 @@ describe('Game Engine On Clock Tick', function () {
 
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = animationEngine.calculateAnimationPosition(gameState, fakeAnimationComplete)
+        let newGameState = calculateAnimationPosition(gameState, fakeAnimationComplete)
         expect(wasCalled).to.equal(true)
     })
 })

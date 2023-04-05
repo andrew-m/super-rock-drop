@@ -1,5 +1,7 @@
-const GameState = require('../model/GameState.js').GameState;
-const Blob = require('../model/Blob.js').Blob;
+// const GameState = require('../model/GameState.js').GameState;
+import {GameState} from '../model/GameState.js';
+// const Blob = require('../model/Blob.js').Blob;
+import {Blob} from '../model/Blob.js';
 
 function calculateAnimationPosition(gameState, animationCompleteCallback) {
     let allAtNewPositionAlready = true
@@ -17,6 +19,6 @@ function calculateAnimationPosition(gameState, animationCompleteCallback) {
     return new GameState(newBlobsOldPositionsMoved, true)
 }
 
-module.exports = {
+export {
     calculateAnimationPosition
 }

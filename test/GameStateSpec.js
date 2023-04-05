@@ -1,11 +1,21 @@
-require('mocha')
-const {expect} = require('chai')
-const assert = require('assert');
-const gameEngine = require('../model/GameEngine.js');
-let GameState = require('../model/GameState.js').GameState;
-let primeNextColour = require('../model/GameState.js').primeNextColour;
-let GameStateColours = require('../model/GameState.js').colours;
-const Blob = require('../model/Blob.js').Blob;
+import 'mocha';
+import {expect} from 'chai';
+import {
+    spawnPlayerControlledBlobsIfNoPCBlobs,
+    keyLeft,
+    keyRight,
+    keyDown,
+    keyRotate,
+    moveBlobsThatShouldFallToRestingPosition,
+    whereShouldIBeOnRotate,
+    pcBlobHasCrashedIntoOtherBlob,
+    animationComplete
+} from '../model/GameEngine.js';
+
+import {GameState, primeNextColour} from '../model/GameState.js';
+let GameStateColours = GameState.colours;
+import {Blob} from '../model/Blob.js';
+
 
 describe('GameState Copy functions', function () {
 //todo Refactor to reduce dependence on constructor

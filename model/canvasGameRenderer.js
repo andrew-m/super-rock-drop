@@ -1,5 +1,4 @@
-var gameModel = require('./Constants');
-
+import { grid } from '../model/Constants.js';
 class CanvasGameRenderer {
     constructor (canvas) {
         this.canvas = canvas
@@ -8,8 +7,8 @@ class CanvasGameRenderer {
         this.context = this.canvas.getContext("2d")
         this.width = this.canvas.width
         this.height = this.canvas.height
-        this.gridWidth = gameModel.grid.width;
-        this.gridHeight = gameModel.grid.height;
+        this.gridWidth = grid.width;
+        this.gridHeight = grid.height;
         this.clearWholeGameArea()
     }
     clearWholeGameArea() {
@@ -62,4 +61,4 @@ class CanvasGameRenderer {
     }
 }
 
-module.exports = { CanvasGameRenderer }
+export { CanvasGameRenderer }

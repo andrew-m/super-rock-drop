@@ -32,7 +32,7 @@ function primeNextColour(gameState) {
     return new GameState(gameState.Blobs, gameState.needsAnimation, colourArray)
 }
 
-module.exports = {
+export {
     GameState,
     primeNextColour
 }

@@ -45,7 +45,7 @@ function hasNonPCBlobDirectlyLeft(blob2, allBlobs) {
         )
 }
 
-module.exports = {
+export {
     hasNonPCBlobDirectlyBelow,
     getOtherPlayerControlledBlob,
     hasNonPCBlobDirectlyRight,

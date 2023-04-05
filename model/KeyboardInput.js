@@ -40,4 +40,4 @@ class KeyboardInput {
     }
 }
 
-module.exports = {KeyboardInput, keyRegistration}
+export {KeyboardInput, keyRegistration}

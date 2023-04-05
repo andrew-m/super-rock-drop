@@ -1,10 +1,19 @@
-require('mocha')
-const {expect} = require('chai')
-const assert = require('assert');
-const gameEngine = require('../model/GameEngine.js');
-let GameState = require('../model/GameState.js').GameState;
-let primeNextColour = require('../model/GameState.js').primeNextColour;
-const Blob = require('../model/Blob.js').Blob;
+import 'mocha';
+import {expect} from 'chai';
+import {spawnPlayerControlledBlobsIfNoPCBlobs,
+    keyLeft,
+    keyRight,
+    keyDown,
+    keyRotate,
+    moveBlobsThatShouldFallToRestingPosition,
+    whereShouldIBeOnRotate,
+    pcBlobHasCrashedIntoOtherBlob,
+    animationComplete} from '../model/GameEngine.js';
+
+import {GameState, primeNextColour} from '../model/GameState.js';
+// let primeNextColour = require('../model/GameState.js').primeNextColour;
+import {Blob} from '../model/Blob.js';
+
 
 describe('Game Engine On Clock Tick', function () {
 
@@ -16,7 +25,7 @@ describe('Game Engine On Clock Tick', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -29,12 +38,12 @@ describe('Game Engine On Clock Tick', function () {
         let newBlobArray = [new Blob(1, 11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
 
-        newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -44,7 +53,7 @@ describe('Game Engine On Clock Tick', function () {
         let newBlobArray = [new Blob(1, 9), new Blob(1, 11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(11)
@@ -56,7 +65,7 @@ describe('Game Engine On Clock Tick', function () {
         let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(1, 11)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(9)
@@ -73,7 +82,7 @@ describe('Recording old positions for animation', function(){
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -92,7 +101,7 @@ describe('Recording old positions for animation', function(){
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs.length).to.equal(1)
         expect(newGameState.Blobs[0].x).to.equal(1)
@@ -101,7 +110,7 @@ describe('Recording old positions for animation', function(){
         expect(newGameState.Blobs[0].oldy).to.equal(1)
         expect(newGameState.needsAnimation).to.equal(true)
 
-        newGameState = gameEngine.animationComplete(gameState)
+        newGameState = animationComplete(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -117,14 +126,14 @@ describe('Recording old positions for animation', function(){
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.moveBlobsThatShouldFallToRestingPosition(gameState)
+        let newGameState = moveBlobsThatShouldFallToRestingPosition(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
         expect(newGameState.Blobs[0].oldx).to.equal(1)
         expect(newGameState.Blobs[0].oldy).to.equal(1)
 
-        newGameState = gameEngine.animationComplete(gameState)
+        newGameState = animationComplete(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -143,7 +152,7 @@ describe('On Move Keyboard Events', function () {
             new Blob(3, 6)
         ]
         let gameState = new GameState(newBlobArray)
-        gameState = gameEngine.keyLeft(gameState)
+        gameState = keyLeft(gameState)
 
         expect(gameState.Blobs[0].x).to.equal(2)
         expect(gameState.Blobs[0].isPlayerControlled).to.equal(true)
@@ -153,7 +162,7 @@ describe('On Move Keyboard Events', function () {
     it('Should move player controlled blobs right', function () {
         let newBlobArray = [new Blob(3, 3, "#AAFFAA", true), new Blob(3, 6)]
         let gameState = new GameState(newBlobArray)
-        gameState = gameEngine.keyRight(gameState)
+        gameState = keyRight(gameState)
 
         expect(gameState.Blobs[0].x).to.equal(4)
         expect(gameState.Blobs[0].isPlayerControlled).to.equal(true)
@@ -166,7 +175,7 @@ describe('On Move Keyboard Events', function () {
             new Blob(3, 12)
         ]
         let gameState = new GameState(newBlobArray)
-        gameState = gameEngine.keyDown(gameState)
+        gameState = keyDown(gameState)
 
         expect(gameState.Blobs[0].x).to.equal(3)
         expect(gameState.Blobs[0].y).to.equal(4)
@@ -181,7 +190,7 @@ describe('On Move Keyboard Events Colliding with sides', function () {
         let newBlobArray = [new Blob(1, 9, "#AAFFAA", true), new Blob(2, 9, "#FFAAAA", true)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyLeft(gameState)
+        let newGameState = keyLeft(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[1].x).to.equal(2)
@@ -191,7 +200,7 @@ describe('On Move Keyboard Events Colliding with sides', function () {
         let newBlobArray = [new Blob(5, 9, "#AAFFAA", true), new Blob(6, 9, "#FFAAAA", true)];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRight(gameState)
+        let newGameState = keyRight(gameState)
 
         expect(newGameState.Blobs[1].x).to.equal(6)
         expect(newGameState.Blobs[0].x).to.equal(5)
@@ -208,7 +217,7 @@ describe('On Move Keyboard Events Colliding with blobs sideways', function () {
 
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyLeft(gameState)
+        let newGameState = keyLeft(gameState)
 
         expect(newGameState.Blobs[1].x).to.equal(2) //non PC doesn't move
         expect(newGameState.Blobs[2].x).to.equal(3)
@@ -223,7 +232,7 @@ describe('On Move Keyboard Events Colliding with blobs sideways', function () {
 
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRight(gameState)
+        let newGameState = keyRight(gameState)
 
         expect(newGameState.Blobs[1].x).to.equal(2) //non PC doesn't move
         expect(newGameState.Blobs[2].x).to.equal(3)
@@ -238,7 +247,7 @@ describe('On rotate keyboard events', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRotate(gameState)
+        let newGameState = keyRotate(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(9)
@@ -253,7 +262,7 @@ describe('On rotate keyboard events', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRotate(gameState)
+        let newGameState = keyRotate(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(4)
         expect(newGameState.Blobs[0].y).to.equal(8)
@@ -268,7 +277,7 @@ describe('On rotate keyboard events', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRotate(gameState)
+        let newGameState = keyRotate(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(6)
         expect(newGameState.Blobs[0].y).to.equal(8)
@@ -284,7 +293,7 @@ describe('On rotate keyboard events', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRotate(gameState)
+        let newGameState = keyRotate(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(5)
         expect(newGameState.Blobs[0].y).to.equal(8)
@@ -301,7 +310,7 @@ describe('When player controlled blobs crash', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the bottom
+        let newGameState = keyDown(gameState) //you can go _to_ the bottom
 
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(12)
@@ -310,7 +319,7 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].y).to.equal(12)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
 
-        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the bottom
+        newGameState = keyDown(gameState) //you can't go _through_ the bottom
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(12)
         expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
@@ -326,7 +335,7 @@ describe('When player controlled blobs crash', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the bottom
+        let newGameState = keyDown(gameState) //you can go _to_ the bottom
 
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(11)
@@ -335,7 +344,7 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].y).to.equal(12)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
 
-        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the bottom
+        newGameState = keyDown(gameState) //you can't go _through_ the bottom
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(11)
         expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
@@ -353,7 +362,7 @@ describe('When player controlled blobs crash', function () {
 
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the blob
+        let newGameState = keyDown(gameState) //you can go _to_ the blob
 
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(10)
@@ -362,7 +371,7 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[1].y).to.equal(11)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
 
-        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the blob
+        newGameState = keyDown(gameState) //you can't go _through_ the blob
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(10)
         expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
@@ -379,7 +388,7 @@ describe('When player controlled blobs crash', function () {
 
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyDown(gameState) //crash
+        let newGameState = keyDown(gameState) //crash
 
         expect(newGameState.needsAnimation).to.equal(true)
     })
@@ -393,7 +402,7 @@ describe('When player controlled blobs crash', function () {
 
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyDown(gameState) //you can go _to_ the blob
+        let newGameState = keyDown(gameState) //you can go _to_ the blob
 
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(11)
@@ -404,7 +413,7 @@ describe('When player controlled blobs crash', function () {
         expect(newGameState.Blobs[2].x).to.equal(3)
         expect(newGameState.Blobs[2].y).to.equal(12)
 
-        newGameState = gameEngine.keyDown(gameState) //you can't go _through_ the blob
+        newGameState = keyDown(gameState) //you can't go _through_ the blob
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(11)
         expect(newGameState.Blobs[0].isPlayerControlled).to.equal(false)
@@ -423,7 +432,7 @@ describe('On rotate crashes', function () {
         ];
         let gameState = new GameState(newBlobArray)
 
-        let newGameState = gameEngine.keyRotate(gameState)
+        let newGameState = keyRotate(gameState)
 
         expect(newGameState.Blobs[0].x).to.equal(3)
         expect(newGameState.Blobs[0].y).to.equal(9)
@@ -441,7 +450,7 @@ describe('Should detect crashed blobs', function () {
             new Blob(4, 10, "#FFAAAA", true),
             new Blob(4, 10, "#FFAAAA", false)
         ]
-        let isCrashed = gameEngine.pcBlobHasCrashedIntoOtherBlob(newBlobArray);
+        let isCrashed = pcBlobHasCrashedIntoOtherBlob(newBlobArray);
         expect(isCrashed).to.equal(true)
     })
     it('Should return false if PC blob in same place as itself', function () {
@@ -449,7 +458,7 @@ describe('Should detect crashed blobs', function () {
             new Blob(4, 9, "#AAFFAA", true),
             new Blob(4, 10, "#FFAAAA", true),
         ]
-        let isCrashed = gameEngine.pcBlobHasCrashedIntoOtherBlob(newBlobArray);
+        let isCrashed = pcBlobHasCrashedIntoOtherBlob(newBlobArray);
         expect(isCrashed).to.equal(false
         )
     })
@@ -460,7 +469,7 @@ describe('Spawn new player controlled blobs', function () {
         let blobArray = [] //noblobs
         let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
 
-        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newGameState = spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
         let newBlobArray = newGameState.Blobs
         expect(newBlobArray.length).to.equal(2)
 
@@ -476,7 +485,7 @@ describe('Spawn new player controlled blobs', function () {
         let blobArray = [] //noblobs
         let gameState = new GameState(blobArray, false, [0, 3])
 
-        let newGameState = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newGameState = spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
 
         expect(newGameState.Blobs.length).to.equal(2)
 
@@ -491,7 +500,7 @@ describe('Spawn new player controlled blobs', function () {
         ]
         let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
 
-        let newBlobArray = gameEngine.spawnPlayerControlledBlobsIfNoPCBlobs(gameState).Blobs
+        let newBlobArray = spawnPlayerControlledBlobsIfNoPCBlobs(gameState).Blobs
 
         expect(newBlobArray.length).to.equal(2)
 
@@ -509,7 +518,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobLeft, new GameState([blobLeft, blobRight]));
+        let newPositionedBlob = whereShouldIBeOnRotate(blobLeft, new GameState([blobLeft, blobRight]));
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y)
@@ -519,7 +528,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobLeft = new Blob(3, 8, "#AAFFAA", true);
         var blobRight = new Blob(4, 8, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobRight, new GameState([blobLeft, blobRight]));
+        let newPositionedBlob = whereShouldIBeOnRotate(blobRight, new GameState([blobLeft, blobRight]));
 
         expect(newPositionedBlob.x).to.equal(blobLeft.x)
         expect(newPositionedBlob.y).to.equal(blobLeft.y + 1)
@@ -529,7 +538,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobTop, new GameState([blobTop, blobBottom]));
+        let newPositionedBlob = whereShouldIBeOnRotate(blobTop, new GameState([blobTop, blobBottom]));
 
         expect(newPositionedBlob.x).to.equal(4)
         expect(newPositionedBlob.y).to.equal(8)
@@ -539,7 +548,7 @@ describe('Where should I be blob intended position calculator', function () {
         var blobTop = new Blob(3, 8, "#AAFFAA", true);
         var blobBottom = new Blob(3, 9, "#AAFFAA", true);
 
-        let newPositionedBlob = gameEngine.whereShouldIBeOnRotate(blobBottom, new GameState([blobBottom, blobTop]));
+        let newPositionedBlob = whereShouldIBeOnRotate(blobBottom, new GameState([blobBottom, blobTop]));
 
         expect(newPositionedBlob.x).to.equal(3)
         expect(newPositionedBlob.y).to.equal(8)

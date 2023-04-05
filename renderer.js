@@ -1,23 +1,29 @@
-let GameState = require('./model/GameState.js').GameState;
-let primeNextColour = require('./model/GameState.js').primeNextColour;
-const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
-let GameEngine = require('./model/GameEngine');
-let AnimationEngine = require('./model/AnimationEngine');
+import {GameState, primeNextColour } from './model/GameState.js';
+
+// let primeNextColour = require('./model/GameState.js').primeNextColour;
+// const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
+import { CanvasGameRenderer } from './model/CanvasGameRenderer.js';
+
+// let GameEngine = require('./model/GameEngine');
+import {keyLeft, keyRight, keyDown, keyRotate, animationComplete} from './model/GameEngine.js';
+// let AnimationEngine = require('./model/AnimationEngine');
+import {calculateAnimationPosition as AnimationEngine} from './model/AnimationEngine.js';
 
 // let GameEngineController = require('./model/GameEngineController.js');
-let KeyboardInput = require("./model/KeyboardInput.js").KeyboardInput
-let keyRegistration = require("./model/KeyboardInput.js").keyRegistration
+// let KeyboardInput = require("./model/KeyboardInput.js").KeyboardInput
+import {KeyboardInput, keyRegistration} from "./model/KeyboardInput.js"
+// let keyRegistration = require("./model/KeyboardInput.js").keyRegistration
 let gameState
-let canvasGameRenderer
+// let CanvasGameRenderer
 
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
         return;
     }
 
-    canvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
+    CanvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
 
-    canvasGameRenderer.Setup();
+    CanvasGameRenderer.Setup();
 
     let newBlobArray = [
         // new Blob(1, 1, '#ff0000'),
@@ -33,18 +39,18 @@ const setup = function (doc) {
     gameState = primeNextColour(gameState)
     console.log("Primed^^^")
     console.log(JSON.stringify(gameState))
-    canvasGameRenderer.RenderGameState(gameState)
+    CanvasGameRenderer.RenderGameState(gameState)
 
     let keys = [
-        new keyRegistration("KeyZ", () => gameState = GameEngine.keyLeft(gameState)),
-        new keyRegistration("KeyX", () => gameState = GameEngine.keyRight(gameState)),
+        new keyRegistration("KeyZ", () => gameState = keyLeft(gameState)),
+        new keyRegistration("KeyX", () => gameState = keyRight(gameState)),
         new keyRegistration(
             "Period",
-            () => gameState = GameEngine.keyDown(gameState),
+            () => gameState = keyDown(gameState),
             true,
             50
         ),
-        new keyRegistration("Space", () => gameState = GameEngine.keyRotate(gameState))
+        new keyRegistration("Space", () => gameState = keyRotate(gameState))
     ]
 
     let ki = new KeyboardInput(keys);
@@ -61,11 +67,11 @@ let timeAtLastTick = 0
 function AnimationLoop(timestamp, gameRenderer, gameState) {
     if (timestamp - timeAtLastTick > 1000) {
         timeAtLastTick = timestamp
-        gameState = GameEngine.keyDown(gameState)
+        gameState = keyDown(gameState)
     }
 
     if (gameState.needsAnimation) {
-        gameState = AnimationEngine.calculateAnimationPosition(gameState, GameEngine.animationComplete)
+        gameState = AnimationEngine.calculateAnimationPosition(gameState, animationComplete)
         gameState = primeNextColour(gameState)
     }
 
@@ -75,10 +81,10 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
 }
 
 function loop (timestamp) {
-    gameState = AnimationLoop(timestamp, canvasGameRenderer, gameState)
+    gameState = AnimationLoop(timestamp, CanvasGameRenderer, gameState)
     window.requestAnimationFrame(loop)
 }
 
-module.exports = {
+export {
     setup
 }

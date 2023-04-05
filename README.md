@@ -15,6 +15,19 @@ npm test
 npm start
 
 
+## Random notes I found about running a local server - no internet access so can't download the module.
+## Test your app with a web server
+Use a simple HTTP server, such as the [node.js](https://nodejs.org/en/) or
+[python simple http server](https://docs.python.org/2/library/simplehttpserver.html)
+to test your application.
+For example, start a simple server in your project directory with:
+```
+python -m SimpleHTTPServer 8000
+```
+And visit localhost:8000/path/to/myapp/hello.html.
+
+
+
 ## Old Notes on the Game Engine:
 
 As much as possible (and more as I understand what I'm doing) the Game Engine is a pure function.

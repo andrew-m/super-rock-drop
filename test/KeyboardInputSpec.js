@@ -1,9 +1,12 @@
-require('mocha')
-const { expect } = require('chai')
-var lolex = require("lolex");
-var assert = require('assert');
-var KeyboardInput = require('../model/KeyboardInput').KeyboardInput;
-var keyRegistration = require('../model/KeyboardInput').keyRegistration;
+import 'mocha';
+import {expect} from 'chai';
+// var lolex = require("lolex");
+import lolex from "lolex";
+
+// var KeyboardInput = require('../model/KeyboardInput').KeyboardInput;
+import {KeyboardInput, keyRegistration} from '../model/KeyboardInput.js';
+// var keyRegistration = require('../model/KeyboardInput').keyRegistration;
+
 var clock;
 
 describe('Keyboard', function() {
