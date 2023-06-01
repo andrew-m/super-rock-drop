@@ -26,7 +26,10 @@ python -m SimpleHTTPServer 8000
 ```
 And visit localhost:8000/path/to/myapp/hello.html.
 
-
+```
+python3 -m http.server
+```
+^^^ That's the one that was in my command line history.
 
 ## Old Notes on the Game Engine:
 

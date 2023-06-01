@@ -13,14 +13,13 @@
 
 
     <script src="./renderer.js" type="module"></script>
-    <script>
+    <script type="module"> //only module code can access module code. But module code can be inline in scrip blocks - if you give it the module attribute.
       // You can also require other files to run in this process
-//      import { Setup } from './renderer.js'; // don't know why this syntax doesn't work.
-      let setup = require('./renderer.js').setup;
-
+      import { setup } from './renderer.js'; // don't know why this syntax doesn't work. (It's case sensitive!)
+      // let setup = require('./renderer.js').setup;
+      // setup();
       document.addEventListener('DOMContentLoaded', pageLoaded);
-
-      function pageLoaded(){
+      function pageLoaded(){  
         setup(document);
       }
     </script>

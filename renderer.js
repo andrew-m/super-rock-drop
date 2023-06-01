@@ -7,23 +7,23 @@ import { CanvasGameRenderer } from './model/CanvasGameRenderer.js';
 // let GameEngine = require('./model/GameEngine');
 import {keyLeft, keyRight, keyDown, keyRotate, animationComplete} from './model/GameEngine.js';
 // let AnimationEngine = require('./model/AnimationEngine');
-import {calculateAnimationPosition as AnimationEngine} from './model/AnimationEngine.js';
+import {calculateAnimationPosition} from './model/AnimationEngine.js';
 
 // let GameEngineController = require('./model/GameEngineController.js');
 // let KeyboardInput = require("./model/KeyboardInput.js").KeyboardInput
 import {KeyboardInput, keyRegistration} from "./model/KeyboardInput.js"
 // let keyRegistration = require("./model/KeyboardInput.js").keyRegistration
 let gameState
-// let CanvasGameRenderer
+let canvasGameRenderer
 
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
         return;
     }
 
-    CanvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
+    canvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
 
-    CanvasGameRenderer.Setup();
+    canvasGameRenderer.Setup();
 
     let newBlobArray = [
         // new Blob(1, 1, '#ff0000'),
@@ -39,7 +39,7 @@ const setup = function (doc) {
     gameState = primeNextColour(gameState)
     console.log("Primed^^^")
     console.log(JSON.stringify(gameState))
-    CanvasGameRenderer.RenderGameState(gameState)
+    canvasGameRenderer.RenderGameState(gameState)
 
     let keys = [
         new keyRegistration("KeyZ", () => gameState = keyLeft(gameState)),
@@ -71,7 +71,7 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
     }
 
     if (gameState.needsAnimation) {
-        gameState = AnimationEngine.calculateAnimationPosition(gameState, animationComplete)
+        gameState = calculateAnimationPosition(gameState, animationComplete)
         gameState = primeNextColour(gameState)
     }
 
@@ -81,7 +81,7 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
 }
 
 function loop (timestamp) {
-    gameState = AnimationLoop(timestamp, CanvasGameRenderer, gameState)
+    gameState = AnimationLoop(timestamp, canvasGameRenderer, gameState)
     window.requestAnimationFrame(loop)
 }
 
