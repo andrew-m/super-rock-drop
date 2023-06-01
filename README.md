@@ -17,19 +17,13 @@ npm start
 
 ## Random notes I found about running a local server - no internet access so can't download the module.
 ## Test your app with a web server
-Use a simple HTTP server, such as the [node.js](https://nodejs.org/en/) or
-[python simple http server](https://docs.python.org/2/library/simplehttpserver.html)
-to test your application.
-For example, start a simple server in your project directory with:
-```
-python -m SimpleHTTPServer 8000
-```
-And visit localhost:8000/path/to/myapp/hello.html.
-
 ```
 python3 -m http.server
 ```
 ^^^ That's the one that was in my command line history.
+
+Then browse to: 
+http://localhost:8000/index.html
 
 ## Old Notes on the Game Engine:
 

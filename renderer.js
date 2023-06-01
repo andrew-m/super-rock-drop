@@ -1,18 +1,12 @@
 import {GameState, primeNextColour } from './model/GameState.js';
-
-// let primeNextColour = require('./model/GameState.js').primeNextColour;
-// const CanvasGameRenderer = require('./model/canvasGameRenderer').CanvasGameRenderer;
 import { CanvasGameRenderer } from './model/CanvasGameRenderer.js';
 
-// let GameEngine = require('./model/GameEngine');
 import {keyLeft, keyRight, keyDown, keyRotate, animationComplete} from './model/GameEngine.js';
-// let AnimationEngine = require('./model/AnimationEngine');
 import {calculateAnimationPosition} from './model/AnimationEngine.js';
 
-// let GameEngineController = require('./model/GameEngineController.js');
-// let KeyboardInput = require("./model/KeyboardInput.js").KeyboardInput
+// let GameEngineController = require('./model/GameEngineController.js'); //fossil?
 import {KeyboardInput, keyRegistration} from "./model/KeyboardInput.js"
-// let keyRegistration = require("./model/KeyboardInput.js").keyRegistration
+
 let gameState
 let canvasGameRenderer
 

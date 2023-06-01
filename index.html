@@ -6,25 +6,17 @@
   </head>
   <body>
     <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <span id="node-version"></span>>,
-    Chromium <span id="chrome-version"></span>>,
-    and Electron <span id="electron-version"></span>>.
-
 
     <script src="./renderer.js" type="module"></script>
     <script type="module"> //only module code can access module code. But module code can be inline in scrip blocks - if you give it the module attribute.
-      // You can also require other files to run in this process
-      import { setup } from './renderer.js'; // don't know why this syntax doesn't work. (It's case sensitive!)
-      // let setup = require('./renderer.js').setup;
-      // setup();
+      import { setup } from './renderer.js'; 
       document.addEventListener('DOMContentLoaded', pageLoaded);
       function pageLoaded(){  
         setup(document);
       }
     </script>
 
-    <canvas width="300" height="600" id="canvas"></canvas>
+    <canvas width="300" height="600" id="canvas" style="border: 1px #000000 solid"></canvas>
     <div id="logContainer"></div>
   </body>
 </html>
