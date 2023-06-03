@@ -20,13 +20,13 @@ const setup = function (doc) {
     canvasGameRenderer.Setup();
 
     let newBlobArray = [
-        // new Blob(1, 1, '#ff0000'),
-        // new Blob(1, 11, '#ff0000'),
-        // new Blob(6, 12, '#00ff00'),
-        // new Blob(3, 4, '#ff00ff'),
-        // new Blob(3, 12, '#0000ff'),
-        // new Blob(3, 1, '#AAFFAA', true),
-        // new Blob(4, 1, '#AAAAFF', true)
+        // new Blob(1, 1, 1),
+        // new Blob(1, 11, 1),
+        // new Blob(6, 12, 2),
+        // new Blob(3, 4, 1),
+        // new Blob(3, 12, 3),
+        // new Blob(3, 1, 0, true),
+        // new Blob(4, 1, 1, true)
     ];
 
     gameState = new GameState(newBlobArray, true)
