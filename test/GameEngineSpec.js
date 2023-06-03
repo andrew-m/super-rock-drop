@@ -114,8 +114,8 @@ describe('Recording old positions for animation', function(){
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
-        expect(newGameState.Blobs[0].oldx).to.equal(undefined)
-        expect(newGameState.Blobs[0].oldy).to.equal(undefined)
+        expect(newGameState.Blobs[0].oldx).to.equal(newGameState.Blobs[0].x)
+        expect(newGameState.Blobs[0].oldy).to.equal(newGameState.Blobs[0].y)
 
         expect(newGameState.needsAnimation).to.equal(false)
     })
@@ -137,8 +137,8 @@ describe('Recording old positions for animation', function(){
 
         expect(newGameState.Blobs[0].x).to.equal(1)
         expect(newGameState.Blobs[0].y).to.equal(12)
-        expect(newGameState.Blobs[0].oldx).to.equal(undefined)
-        expect(newGameState.Blobs[0].oldy).to.equal(undefined)
+        expect(newGameState.Blobs[0].oldx).to.equal(newGameState.Blobs[0].x)
+        expect(newGameState.Blobs[0].oldy).to.equal(newGameState.Blobs[0].y)
         expect(newGameState.Blobs[1].isPlayerControlled).to.equal(true)
         expect(newGameState.Blobs[2].isPlayerControlled).to.equal(true)
     })

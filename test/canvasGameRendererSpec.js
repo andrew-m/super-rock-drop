@@ -1,7 +1,7 @@
 import 'mocha';
 import {expect} from 'chai';
 
-import {CanvasGameRenderer} from '../model/canvasGameRenderer.js';
+import {CanvasGameRenderer} from '../model/CanvasGameRenderer.js';
 
 describe('Game Renderer for HTML canvas', function() {
 

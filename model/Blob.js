@@ -1,5 +1,5 @@
 class Blob {
-    constructor (x, y, colour = 1, isPlayerControlled = false, oldx = undefined, oldy = undefined) {
+    constructor (x, y, colour = 1, isPlayerControlled = false, oldx = x, oldy = y) {
         this.x = x
         this.y = y
         this.colour = colour

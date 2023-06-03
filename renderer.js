@@ -5,7 +5,8 @@ import {keyLeft, keyRight, keyDown, keyRotate, animationComplete} from './model/
 import {calculateAnimationPosition} from './model/AnimationEngine.js';
 
 // let GameEngineController = require('./model/GameEngineController.js'); //fossil?
-import {KeyboardInput, keyRegistration} from "./model/KeyboardInput.js"
+import {KeyboardInput, keyRegistration} from "./model/KeyboardInput.js";
+import {Blob} from "./model/Blob.js";
 
 let gameState
 let canvasGameRenderer
@@ -18,6 +19,8 @@ const setup = function (doc) {
     canvasGameRenderer = new CanvasGameRenderer(doc.getElementById("canvas"));
 
     canvasGameRenderer.Setup();
+
+let wibble = new Blob(1, 1, '#ff0000');
 
     let newBlobArray = [
         // new Blob(1, 1, 1),
