@@ -1,14 +1,6 @@
 
-// const GameState = require('../model/GameState.js').GameState;
-import {GameState, primeNextColour} from '../model/GameState.js';
-// const primeNextColour = require('../model/GameState.js').primeNextColour;
-
-// const Blob = require('../model/Blob.js').Blob;
+import {GameState} from '../model/GameState.js';
 import {Blob} from '../model/Blob.js';
-// const hasNonPCBlobDirectlyBelow = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyBelow;
-// const getOtherPlayerControlledBlob = require('../model/GameStateQueries.js').getOtherPlayerControlledBlob;
-// const hasNonPCBlobDirectlyRight = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyRight;
-// const hasNonPCBlobDirectlyLeft = require('../model/GameStateQueries.js').hasNonPCBlobDirectlyLeft;
 import {hasNonPCBlobDirectlyBelow, getOtherPlayerControlledBlob, hasNonPCBlobDirectlyRight, hasNonPCBlobDirectlyLeft} from '../model/GameStateQueries.js';
 
 function keyLeft(gameState) {
@@ -225,6 +217,9 @@ function animationComplete(gameState) {
     );
     return gameState1
 }
+
+
+//Todo Game engine exports things just for testing. Make sure they're pure functions, and move them to another class/file/thing.
 
 export {
     spawnPlayerControlledBlobsIfNoPCBlobs,

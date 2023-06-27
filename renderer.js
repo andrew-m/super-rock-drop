@@ -20,8 +20,6 @@ const setup = function (doc) {
 
     canvasGameRenderer.Setup();
 
-let wibble = new Blob(1, 1, '#ff0000');
-
     let newBlobArray = [
         // new Blob(1, 1, 1),
         // new Blob(1, 11, 1),
@@ -69,7 +67,7 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
 
     if (gameState.needsAnimation) {
         gameState = calculateAnimationPosition(gameState, animationComplete)
-        gameState = primeNextColour(gameState)
+        gameState = primeNextColour(gameState) //this means we prime next colour on every animation frame when animation is needed, which seems uneeded! but without it at present colours stop rotating
     }
 
     gameRenderer.RenderGameState(gameState)
@@ -78,7 +76,7 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
 }
 
 function loop (timestamp) {
-    gameState = AnimationLoop(timestamp, canvasGameRenderer, gameState)
+    gameState = AnimationLoop(timestamp, canvasGameRenderer, gameState) //todo these should be arguments to the loop function, so its stateless.
     window.requestAnimationFrame(loop)
 }
 

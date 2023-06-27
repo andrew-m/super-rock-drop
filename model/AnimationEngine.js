@@ -1,6 +1,4 @@
-// const GameState = require('../model/GameState.js').GameState;
 import {GameState} from '../model/GameState.js';
-// const Blob = require('../model/Blob.js').Blob;
 import {Blob} from '../model/Blob.js';
 
 function calculateAnimationPosition(gameState, animationCompleteCallback) {
