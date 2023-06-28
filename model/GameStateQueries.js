@@ -35,7 +35,6 @@ function hasNonPCBlobDirectlyRight(blob, allBlobs) {
         )
 }
 
-
 function hasNonPCBlobDirectlyLeft(blob2, allBlobs) {
     return allBlobs.filter(b => !b.isPlayerControlled) //all the non PC blobs
         .some(b =>

@@ -67,7 +67,7 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
 
     if (gameState.needsAnimation) {
         gameState = calculateAnimationPosition(gameState, animationComplete)
-        gameState = primeNextColour(gameState) //this means we prime next colour on every animation frame when animation is needed, which seems uneeded! but without it at present colours stop rotating
+        gameState = primeNextColour(gameState) //this means we prime next colour on every animation frame when animation is needed, which seems unneeded! but without it at present colours stop rotating
     }
 
     gameRenderer.RenderGameState(gameState)
@@ -76,7 +76,7 @@ function AnimationLoop(timestamp, gameRenderer, gameState) {
 }
 
 function loop (timestamp) {
-    gameState = AnimationLoop(timestamp, canvasGameRenderer, gameState) //todo these should be arguments to the loop function, so its stateless.
+    gameState = AnimationLoop(timestamp, canvasGameRenderer, gameState) //todo these should be arguments to the loop function, so it's stateless.
     window.requestAnimationFrame(loop)
 }
 
