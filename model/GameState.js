@@ -10,7 +10,8 @@ class GameState {
         return null
     }
 }
- //ToDo this is probably a rendering concern, not a game-state concern, should just be the index we store, rendereds can map it to colours (or graphics)
+ //ToDo this is probably a rendering concern, not a game-state concern, should just be the index we store, 
+ //renderers can map it to colours (or graphics)
  //todo we should also probably store (and expose) the number of colurs being used, rather than counting this array length later on.
 const colourMap = ["#cc0000",
     "#00cc00",
