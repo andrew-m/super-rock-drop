@@ -1,10 +1,9 @@
 {
   "name": "super-rock-drop",
   "version": "0.1.0",
-  "description": "A Super Foul Eggs clone and Electron learning exercise",
+  "description": "A Super Foul Eggs clone and Javascript learning exercise",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
     "test": "mocha test/*.js"
   },
   "repository": "github:andrew-m/super-rock-drop",
@@ -18,10 +17,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-almost": "^1.0.1",
-    "electron": "^13.1.8",
-    "mocha": "^9.0.3"
-  },
-  "dependencies": {
+    "mocha": "^9.0.3",
     "lolex": "^4.1.0"
   }
 }
