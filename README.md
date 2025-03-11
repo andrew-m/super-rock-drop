@@ -54,14 +54,15 @@ New blobs in finite colours.
 Have key for falling all the way intentionally (ie - drop down)
 Perhaps space becomes drop, up becomes rotate?
     
-Ignore keyboard events if no PC blobs (ie still animating)
+Ignore keyboard events if no PC blobs (ie still animating) [Thought, 11 mar 2025 - should there simply be a flag on the game state when it's animating? Rather than inferring it. Allows for hard behaviour about ignoring certain events. But couples animation to game engine (could in theory be a problem).
+
 Queue of Rock events needs to be processed before spawn events.
 Same colour "pop" events.
 
 Then onto two player land
 
 ```
-Copyright 2019 Andrew Maddison
+Copyright 2019-2025 Andrew Maddison
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
