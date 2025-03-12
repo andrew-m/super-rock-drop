@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Super Rock Drop test rig</title>
+  </head>
+  <body>
+    <h1>Test the blobs</h1>
+<p>Bananas</p>
+    <script src="./renderer.js" type="module"></script>
+    <script type="module"> //only module code can access module code. But module code can be inline in script blocks - if you give it the module attribute.
+      import { setup } from './testRigRenderer.js'; 
+      document.addEventListener('DOMContentLoaded', pageLoaded);
+      function pageLoaded(){  
+        setup(document);
+      }
+    </script>
+
+    <canvas width="300" height="600" id="canvasLeft" style="border: 1px #FF0000 solid"></canvas>
+    <button id="leftBtn" type="button"> Left </button>
+    <canvas width="300" height="600" id="canvasRight" style="border: 1px #00FF00 solid"></canvas>
+    <div id="logContainer"></div>
+  </body>
+</html>
