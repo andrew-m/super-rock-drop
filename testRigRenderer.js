@@ -21,6 +21,7 @@ Ideally some sort of inspection - ie render the gamestates as prettified json.
 
 let gameState
 let canvasGameRendererLeft
+let testTimestamp = 1000
 
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
@@ -28,10 +29,12 @@ const setup = function (doc) {
     }
 
     canvasGameRendererLeft = new CanvasGameRenderer(doc.getElementById("canvasLeft"));
-    console.log("Before");
     doc.querySelector("#leftBtn").addEventListener("click", () => gameState = keyLeft(gameState));
-    console.log("After");
-
+    doc.querySelector("#rightBtn").addEventListener("click", () => gameState = keyRight(gameState));
+    doc.querySelector("#rotateBtn").addEventListener("click", () => gameState = keyRotate(gameState));
+    doc.querySelector("#downBtn").addEventListener("click", () => gameState = keyDown(gameState));
+    doc.querySelector("#animateBtn").addEventListener("click", () => gameState =  AnimationLoop(testTimestamp, canvasGameRendererLeft, gameState));
+    
     canvasGameRendererLeft.Setup();
 
     let newBlobArray = [
@@ -67,7 +70,7 @@ const setup = function (doc) {
     window.addEventListener("keydown", (e) => ki.keyDown(e), false);
     window.addEventListener("keyup", (e) => ki.keyUp(e), false);
 
-    loop();
+    // loop();
 }
 
 
