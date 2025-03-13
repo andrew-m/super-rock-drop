@@ -225,7 +225,7 @@ export {
     spawnPlayerControlledBlobsIfNoPCBlobs,
     keyLeft,
     keyRight,
-    keyDown,
+    keyDown, //Also used for 1 second ticks
     keyRotate,
     moveBlobsThatShouldFallToRestingPosition,
     whereShouldIBeOnRotate,

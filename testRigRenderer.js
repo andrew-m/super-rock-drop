@@ -21,7 +21,6 @@ Ideally some sort of inspection - ie render the gamestates as prettified json.
 
 let gameState
 let canvasGameRendererLeft
-let testTimestamp = 1000
 
 const setup = function (doc) {
     if (doc === null || doc === undefined) {
@@ -33,8 +32,8 @@ const setup = function (doc) {
     doc.querySelector("#rightBtn").addEventListener("click", () => gameState = keyRight(gameState));
     doc.querySelector("#rotateBtn").addEventListener("click", () => gameState = keyRotate(gameState));
     doc.querySelector("#downBtn").addEventListener("click", () => gameState = keyDown(gameState));
-    doc.querySelector("#animateBtn").addEventListener("click", () => gameState =  AnimationLoop(testTimestamp, canvasGameRendererLeft, gameState));
-    
+    doc.querySelector("#animateBtn").addEventListener("click", () => gameState =  AnimateAndRender(canvasGameRendererLeft, gameState));
+    doc.querySelector("#tickBtn").addEventListener("click", () => gameState = ClockTickOneSecond(canvasGameRendererLeft, gameState))
     canvasGameRendererLeft.Setup();
 
     let newBlobArray = [
@@ -74,34 +73,21 @@ const setup = function (doc) {
 }
 
 
-let timeAtLastTick = 0
-
-function AnimationLoop(timestamp, gameRenderer, gameState) {
-    if (timestamp - timeAtLastTick > 1000) {
-        timeAtLastTick = timestamp
-        gameState = keyDown(gameState)
-    }
-
+function AnimateAndRender (gameRenderer, gameState) {
     if (gameState.needsAnimation) {
         gameState = calculateAnimationPosition(gameState, animationComplete)
         gameState = primeNextColour(gameState) //this means we prime next colour on every animation frame when animation is needed, which seems unneeded! but without it at present colours stop rotating
     }
 
-    gameRenderer.RenderGameState(gameState)
-
-    return gameState
+    gameRenderer.RenderGameState(gameState);
+    return gameState;
 }
 
-function loop (timestamp) {
-    gameState = AnimationLoop(timestamp, canvasGameRendererLeft, gameState) //todo these should be arguments to the loop function, so it's stateless.
-    window.requestAnimationFrame(loop)
-}
-
-function triggerLeft () {
-    console.log("Try clicky clicky");
-    alert("clicky clicky");
+function ClockTickOneSecond (gameRenderer, gameState) {
+    gameState = keyDown(gameState);
+    return AnimateAndRender(gameRenderer, gameState);
 }
 
 export {
-    setup, triggerLeft as testClick
+    setup
 }
