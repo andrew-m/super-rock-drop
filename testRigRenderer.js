@@ -28,10 +28,10 @@ const setup = function (doc) {
     }
 
     canvasGameRendererLeft = new CanvasGameRenderer(doc.getElementById("canvasLeft"));
-    doc.querySelector("#leftBtn").addEventListener("click", () => gameState = keyLeft(gameState));
-    doc.querySelector("#rightBtn").addEventListener("click", () => gameState = keyRight(gameState));
-    doc.querySelector("#rotateBtn").addEventListener("click", () => gameState = keyRotate(gameState));
-    doc.querySelector("#downBtn").addEventListener("click", () => gameState = keyDown(gameState));
+    doc.querySelector("#leftBtn").addEventListener("click", () => gameState = keyLeftAndAnimate(canvasGameRendererLeft, gameState));
+    doc.querySelector("#rightBtn").addEventListener("click", () => gameState = keyRightAndAnimate(canvasGameRendererLeft, gameState));
+    doc.querySelector("#rotateBtn").addEventListener("click", () => gameState = keyRotateAndAnimate(canvasGameRendererLeft, gameState));
+    doc.querySelector("#downBtn").addEventListener("click", () => gameState = keyDownAndAnimate(canvasGameRendererLeft, gameState));
     doc.querySelector("#animateBtn").addEventListener("click", () => gameState =  AnimateAndRender(canvasGameRendererLeft, gameState));
     doc.querySelector("#tickBtn").addEventListener("click", () => gameState = ClockTickOneSecond(canvasGameRendererLeft, gameState))
     canvasGameRendererLeft.Setup();
@@ -72,6 +72,22 @@ const setup = function (doc) {
     // loop();
 }
 
+function keyLeftAndAnimate (gameRenderer, gameState) {
+    gs = keyLeft(gameState);
+    return AnimateAndRender(gameRenderer, gs);
+}
+
+function keyRightAndAnimate (gameRenderer, gameState) {
+    return AnimateAndRender(gameRenderer, keyRight(gameState));
+}
+
+function keyRotateAndAnimate (gameRenderer, gameState) {
+    return AnimateAndRender(gameRenderer, keyRotate(gameState));
+}
+
+function keyDownAndAnimate (gameRenderer, gameState) {
+    return AnimateAndRender(gameRenderer, keyDown(gameState));
+}
 
 function AnimateAndRender (gameRenderer, gameState) {
     if (gameState.needsAnimation) {
