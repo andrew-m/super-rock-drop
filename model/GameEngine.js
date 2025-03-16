@@ -12,7 +12,7 @@ function keyRight(gameState) {
 }
 
 function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
-    let newBlobArray = gameState.Blobs
+    let newBlobArray = gameState.Blobs;
     if (! gameState.Blobs.some(b => b.isPlayerControlled === true)) {
         //Immutable equivalent of array.push
         newBlobArray = [...gameState.Blobs,
@@ -20,8 +20,6 @@ function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
             new Blob(4, 1, gameState.nextColours[1], true)
         ];
     }
-    console.log()
-    // GameState.pri
     return new GameState(newBlobArray, gameState.needsAnimation, []);
 }
 

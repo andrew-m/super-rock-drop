@@ -1,15 +1,25 @@
 //import {hasNonPCBlobDirectlyBelow, getOtherPlayerControlledBlob, hasNonPCBlobDirectlyRight, hasNonPCBlobDirectlyLeft} from '../model/GameStateQueries.js';
 import {Blob} from './Blob.js';
+import { GameState } from './GameState.js';
 
 function markForPopping (blobArray) {
     var popOrNot = blobArray.filter(b => b.colour == 1).length >=4;
-    let nb = blobArray.map(b => new Blob(b.x, b.y, b.colour, false, b.x, b.y, popOrNot));
+    if(popOrNot) {
+        console.log("Yay pop!");
+    }
+    let nb = blobArray.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, popOrNot && b.colour == 1));
 
     return nb;
 }
 
+function markForPoppingGameState (gameState) {
+    console.log("Marking for popping. GameState:" + JSON.stringify(gameState));
+    return new GameState(markForPopping(gameState.Blobs), false, gameState.nextColours);
+}
+
 export {
-    markForPopping
+    markForPopping,
+    markForPoppingGameState
 }
 
 

@@ -7,6 +7,7 @@ import {calculateAnimationPosition} from './model/AnimationEngine.js';
 // let GameEngineController = require('./model/GameEngineController.js'); //fossil?
 import {KeyboardInput, keyRegistration} from "./model/KeyboardInput.js";
 import {Blob} from "./model/Blob.js";
+import {markForPoppingGameState} from "./model/ColourGroupFinder.js"
 
 /* 
 Plan for this test Rig.
@@ -33,7 +34,8 @@ const setup = function (doc) {
     doc.querySelector("#rotateBtn").addEventListener("click", () => gameState = keyRotateAndAnimate(canvasGameRendererLeft, gameState));
     doc.querySelector("#downBtn").addEventListener("click", () => gameState = keyDownAndAnimate(canvasGameRendererLeft, gameState));
     doc.querySelector("#animateBtn").addEventListener("click", () => gameState =  AnimateAndRender(canvasGameRendererLeft, gameState));
-    doc.querySelector("#tickBtn").addEventListener("click", () => gameState = ClockTickOneSecond(canvasGameRendererLeft, gameState))
+    doc.querySelector("#tickBtn").addEventListener("click", () => gameState = ClockTickOneSecond(canvasGameRendererLeft, gameState));
+    doc.querySelector("#checkForPops").addEventListener("click", () => gameState = CheckForPopsAndAnimate(canvasGameRendererLeft, gameState));
     canvasGameRendererLeft.Setup();
 
     let newBlobArray = [
@@ -86,6 +88,10 @@ function keyRotateAndAnimate (gameRenderer, gameState) {
 
 function keyDownAndAnimate (gameRenderer, gameState) {
     return AnimateAndRender(gameRenderer, keyDown(gameState));
+}
+
+function CheckForPopsAndAnimate (gameRenderer, gameState) {
+    return AnimateAndRender(gameRenderer, markForPoppingGameState(gameState))
 }
 
 function AnimateAndRender (gameRenderer, gameState) {

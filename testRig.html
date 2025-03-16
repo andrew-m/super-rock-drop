@@ -6,7 +6,6 @@
   </head>
   <body>
     <h1>Test the blobs</h1>
-<p>Bananas</p>
     <script src="./renderer.js" type="module"></script>
     <script type="module"> //only module code can access module code. But module code can be inline in script blocks - if you give it the module attribute.
       import { setup } from './testRigRenderer.js'; 
@@ -26,6 +25,8 @@
     <p>
       <button id="animateBtn" type="button">Animation Frame and Render</button>
       <button id="tickBtn" type="button">Clock Tick 1 Second</button>
+    </p>
+      <button id="checkForPops" type="button">CheckForPopping DEBUG</button>
     </p>
     <!-- <canvas width="300" height="600" id="canvasRight" style="border: 1px #00FF00 solid"></canvas> -->
     <div id="logContainer"></div>
