@@ -73,8 +73,7 @@ const setup = function (doc) {
 }
 
 function keyLeftAndAnimate (gameRenderer, gameState) {
-    gs = keyLeft(gameState);
-    return AnimateAndRender(gameRenderer, gs);
+    return AnimateAndRender(gameRenderer, keyLeft(gameState));
 }
 
 function keyRightAndAnimate (gameRenderer, gameState) {
