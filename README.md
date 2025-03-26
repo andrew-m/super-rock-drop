@@ -27,6 +27,9 @@ http://localhost:8000/index.html
 
 ## Old Notes on the Game Engine:
 
+ The grid origin is from the top left corner. 
+ It's One-Indexed, so 1,1 is the top left corner 6, 12 is bottom right (depending on the size of the grid, which I'm trying not to couple to.)
+
 As much as possible (and more as I understand what I'm doing) the Game Engine is a pure function.
 It acts on the game state in a deterministic way, and holds no state of it's own.
 
