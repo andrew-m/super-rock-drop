@@ -19,12 +19,18 @@ class CanvasGameRenderer {
     RenderGameState(gameState){
         this.clearWholeGameArea()
 
-        function drawBlob(colour, gridPositionX, gridPositionY, needsBorder, borderColour, needsPopIndicator) {
+        function drawBlob(colour, gridPositionX, gridPositionY, needsBorder, borderColour, needsPopIndicator, poppingGroup = "X") {
             let res = this.CalculatePositionWidthAndHeight(gridPositionX, gridPositionY, this.gridWidth, this.gridHeight, this.width, this.height);
 
             drawACircle(this.context, res.x, res.y, res.width, colour, needsBorder);
             if (needsPopIndicator){
                 drawACircle(this.context, res.x, res.y, res.width/2, "#ffffff", false);
+            }
+            let verbose = true;
+            if (verbose) {
+                this.context.font = "14pt serif";
+                this.context.fillStyle = "#777777";
+                this.context.fillText(poppingGroup, res.x, res.y);
             }
 
             function drawACircle(context, x, y, diameter,colour,  withBorder) {
@@ -39,12 +45,6 @@ class CanvasGameRenderer {
                     context.stroke();
                 }
             }
-
-            // if (true) {
-            //     this.context.fillStyle = "#000000";
-            //     this.context.arc(res.x, res.y, 5 * 0.47, 0, 2 * Math.PI);
-            //     this.context.fill();
-            // }
         }
 
         gameState.Blobs.forEach(
@@ -55,11 +55,12 @@ class CanvasGameRenderer {
                 let needsBorder = blob.isPlayerControlled;
                 let borderColour = "#404040";
                 let needsPopIndicator = blob.needsPopping;
+                let poppingGroup = blob.poppingGroup;
 
                 if (blob.oldy === undefined) {
-                    drawBlob.call(this, gameState.colourMap[colourIndex], gridPositionX, gridPositionY, needsBorder, borderColour, needsPopIndicator);
+                    drawBlob.call(this, gameState.colourMap[colourIndex], gridPositionX, gridPositionY, needsBorder, borderColour, needsPopIndicator, poppingGroup);
                 } else { //is falling?
-                    drawBlob.call(this, gameState.colourMap[colourIndex], blob.oldx, blob.oldy, needsBorder, borderColour, needsPopIndicator);
+                    drawBlob.call(this, gameState.colourMap[colourIndex], blob.oldx, blob.oldy, needsBorder, borderColour, needsPopIndicator, poppingGroup);
                 }
             }
         )
