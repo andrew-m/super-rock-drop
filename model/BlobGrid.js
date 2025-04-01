@@ -14,6 +14,10 @@ class BlobGrid {
     GetBlob(x,y) {
         return this.twoDArray[x-1][y-1];
     }
+    SetBlob(x,y,oBlob) {
+        this.twoDArray[x-1][y-1] = oBlob;
+        //todo - efficient immutible version of this? For now mutable will do.
+    }
 }
 
 function Get2DArrayFromArray (blobArray) {

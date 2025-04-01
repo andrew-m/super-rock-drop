@@ -1,20 +1,63 @@
 //import {hasNonPCBlobDirectlyBelow, getOtherPlayerControlledBlob, hasNonPCBlobDirectlyRight, hasNonPCBlobDirectlyLeft} from '../model/GameStateQueries.js';
 import {Blob} from './Blob.js';
 import { GameState } from './GameState.js';
+import {BlobGrid} from '../model/BlobGrid.js';
 
 function markForPopping (blobArray) {
-    var popOrNot = blobArray.filter(b => b.colour == 1).length >=4;
-    if(popOrNot) {
-        console.log("Yay pop!");
+    var blobGrid = new BlobGrid(blobArray);
+    let currentGroup = 1;
+    let groupCount = [];
+    groupCount[0] = 0; //no group 0, but I don't want an undefined element?
+    for (let y = 1; y <= 12; y++) {
+        //foreach row going down.
+        //left to right, assign blobs a colour group. If same as left, same group.
+        //Otherwise - next group!p
+        for (let x = 1; x <= 6; x++) {
+            let oBlob = blobGrid.GetBlob(x,y);
+            if (oBlob.hasBlob){
+                //is there a blob to the left?
+                if (x >1 && blobGrid.GetBlob(x-1,y).hasBlob) {
+                    const blobToLeft = blobGrid.GetBlob(x - 1, y).blob;
+                    if (blobToLeft.colour === oBlob.blob.colour) {
+                        //assign current blob's popping group to that of the one to the left. 
+                        oBlob.blob.poppingGroup = blobToLeft.poppingGroup;
+                        groupCount[oBlob.blob.poppingGroup] = groupCount[oBlob.blob.poppingGroup] +1;
+                    } else {
+                        //Otherwise assign a new one.
+                        oBlob.blob.poppingGroup = currentGroup;
+                        groupCount[oBlob.blob.poppingGroup] = 1;
+                        currentGroup++;
+                    }
+                } else {
+                    //there is no blob to the left.
+                    oBlob.blob.poppingGroup = currentGroup;
+                    groupCount[oBlob.blob.poppingGroup] = 1;
+                    currentGroup++;
+                }
+            }
+            blobGrid.SetBlob(x,y,oBlob);
+            //todo assign oblob back into the BlobGrid
+        }
     }
-    let nb = blobArray.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, popOrNot && b.colour == 1));
+    //if any group has more than 4, mark for popping.
+
+    // var popOrNot = blobArray.filter(b => b.colour == 1).length >=4;
+
+    let nb = blobArray.map(b => newBlobWithPopSetCorrectly(b));
 
     return nb;
+
+    function newBlobWithPopSetCorrectly(b) {
+        let popOrNot = groupCount[b.poppingGroup] >= 4; //has popping group != 0 and it's popping group has more than 4 total.
+        return new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, popOrNot, b.poppingGroup);
+    }
 }
 
 function markForPoppingGameState (gameState) {
-    console.log("Marking for popping. GameState:" + JSON.stringify(gameState));
-    return new GameState(markForPopping(gameState.Blobs), false, gameState.nextColours);
+    console.log("Marking for popping. GameState Before:" + JSON.stringify(gameState));
+    let makedGameState = new GameState(markForPopping(gameState.Blobs), false, gameState.nextColours);
+    console.log("Marking for popping. GameState After:" + JSON.stringify(makedGameState));
+    return makedGameState;
 }
 
 export {

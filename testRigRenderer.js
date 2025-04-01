@@ -38,14 +38,22 @@ const setup = function (doc) {
     doc.querySelector("#checkForPops").addEventListener("click", () => gameState = CheckForPopsAndAnimate(canvasGameRendererLeft, gameState));
     canvasGameRendererLeft.Setup();
 
+    // let newBlobArray = [
+    //     // new Blob(1, 1, 1),
+    //     // new Blob(1, 11, 1),
+    //     // new Blob(6, 12, 2),
+    //     // new Blob(3, 4, 1),
+    //     // new Blob(3, 12, 3),
+    //     // new Blob(3, 1, 0, true),
+    //     // new Blob(4, 1, 1, true)
+    // ];
+
     let newBlobArray = [
-        // new Blob(1, 1, 1),
-        // new Blob(1, 11, 1),
-        // new Blob(6, 12, 2),
-        // new Blob(3, 4, 1),
-        // new Blob(3, 12, 3),
-        // new Blob(3, 1, 0, true),
-        // new Blob(4, 1, 1, true)
+        //x y is from a top left corner origin. 6, 12 is bottom right.
+        new Blob(1, 12, 1),
+        new Blob(2, 12, 1),
+        new Blob(3, 12, 1),
+        new Blob(4, 12, 1),
     ];
 
     gameState = new GameState(newBlobArray, true)
