@@ -11,6 +11,22 @@ function keyRight(gameState) {
     return ifPlayerControlled(moveRightIfNotAtEdge, gameState);
 }
 
+function keyDown(gameState) {
+    let newGameState = ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
+    return moveBlobsThatShouldFallToRestingPosition(newGameState)
+}
+
+function keyRotate(gameState) {
+    let oldBlobsArray = gameState.Blobs;
+    var newGameState = ifPlayerControlled(whereShouldIBeOnRotate, gameState)
+    if (pcBlobHasCrashedIntoOtherBlob(newGameState.Blobs)) {
+        let KilledBlobsArray = makePCBlobsNonPC(oldBlobsArray);
+        return new GameState(KilledBlobsArray)
+    }
+
+    return newGameState
+}
+
 function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
     let newBlobArray = gameState.Blobs;
     if (! gameState.Blobs.some(b => b.isPlayerControlled === true)) {
@@ -21,11 +37,6 @@ function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
         ];
     }
     return new GameState(newBlobArray, gameState.needsAnimation, []);
-}
-
-function keyDown(gameState) {
-    let newGameState = ifPlayerControlled(moveDown_OrCrashIfAtBottom_orOtherPCBlobShouldCrash, gameState);
-    return moveBlobsThatShouldFallToRestingPosition(newGameState)
 }
 
 function areInTheSamePlace(c, b) {
@@ -50,16 +61,6 @@ function makePCBlobsNonPC(oldBlobsArray) {
     return oldBlobsArray.map(b => b.isPlayerControlled ? new Blob(b.x, b.y, b.colour, false) : b);
 }
 
-function keyRotate(gameState) {
-    let oldBlobsArray = gameState.Blobs;
-    var newGameState = ifPlayerControlled(whereShouldIBeOnRotate, gameState)
-    if (pcBlobHasCrashedIntoOtherBlob(newGameState.Blobs)) {
-        let KilledBlobsArray = makePCBlobsNonPC(oldBlobsArray);
-        return new GameState(KilledBlobsArray)
-    }
-
-    return newGameState
-}
 
 function whereShouldIBeOnRotate(blob, gameState) {
     let blobArray = gameState.Blobs
@@ -216,17 +217,17 @@ function animationComplete(gameState) {
     return gameState1
 }
 
-
 //Todo Game engine exports things just for testing. Make sure they're pure functions, and move them to another class/file/thing.
 
 export {
-    spawnPlayerControlledBlobsIfNoPCBlobs,
     keyLeft,
     keyRight,
     keyDown, //Also used for 1 second ticks
     keyRotate,
-    moveBlobsThatShouldFallToRestingPosition,
-    whereShouldIBeOnRotate,
-    pcBlobHasCrashedIntoOtherBlob,
-    animationComplete
+    animationComplete, //animation engine, renderer, testRigRenderer and tests.
+//***********************************/
+    spawnPlayerControlledBlobsIfNoPCBlobs, // tests only
+    moveBlobsThatShouldFallToRestingPosition, //tests only
+    whereShouldIBeOnRotate, //tests only
+    pcBlobHasCrashedIntoOtherBlob //tests only
 }

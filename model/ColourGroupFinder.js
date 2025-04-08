@@ -10,29 +10,21 @@ function markForPopping (blobArray) {
     groupCount[0] = 0; //no group 0, but I don't want an undefined element?
     for (let y = 1; y <= 12; y++) {
         //foreach row going down.
-        //left to right, assign blobs a colour group. If same as left, same group.
-        //Otherwise - next group!p
+        //left to right, assign blobs a colour group. If same as left or above, same group.
+        //Otherwise - next group!
         for (let x = 1; x <= 6; x++) {
             let oBlob = blobGrid.GetBlob(x,y);
             if (oBlob.hasBlob){
+                let currentBlob = oBlob.blob;
+                const hasBlobToLeft = x > 1 && blobGrid.GetBlob(x - 1, y).hasBlob;
+                const hasBlobAbove = y > 1 && blobGrid.GetBlob(x, y-1).hasBlob;
                 //is there a blob to the left?
-                if (x >1 && blobGrid.GetBlob(x-1,y).hasBlob) {
-                    const blobToLeft = blobGrid.GetBlob(x - 1, y).blob;
-                    if (blobToLeft.colour === oBlob.blob.colour) {
-                        //assign current blob's popping group to that of the one to the left. 
-                        oBlob.blob.poppingGroup = blobToLeft.poppingGroup;
-                        groupCount[oBlob.blob.poppingGroup] = groupCount[oBlob.blob.poppingGroup] +1;
-                    } else {
-                        //Otherwise assign a new one.
-                        oBlob.blob.poppingGroup = currentGroup;
-                        groupCount[oBlob.blob.poppingGroup] = 1;
-                        currentGroup++;
-                    }
+                if (hasBlobToLeft || hasBlobAbove) {
+                     
+                    const blobUnderScrutiny = hasBlobToLeft ? blobGrid.GetBlob(x - 1, y).blob :  blobGrid.GetBlob(x, y-1).blob;
+                    AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount, currentGroup);
                 } else {
-                    //there is no blob to the left.
-                    oBlob.blob.poppingGroup = currentGroup;
-                    groupCount[oBlob.blob.poppingGroup] = 1;
-                    currentGroup++;
+                    assignToNewGroupAndIncrement(currentBlob, currentGroup, groupCount);
                 }
             }
             blobGrid.SetBlob(x,y,oBlob);
@@ -51,6 +43,23 @@ function markForPopping (blobArray) {
         let popOrNot = groupCount[b.poppingGroup] >= 4; //has popping group != 0 and it's popping group has more than 4 total.
         return new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, popOrNot, b.poppingGroup);
     }
+}
+
+function AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount, currentGroup) {
+    if (blobUnderScrutiny.colour === currentBlob.colour) {
+        //assign current blob's popping group to that of the one under scrutiny.
+        currentBlob.poppingGroup = blobUnderScrutiny.poppingGroup;
+        groupCount[currentBlob.poppingGroup] = groupCount[currentBlob.poppingGroup] + 1;
+    } else {
+        //Otherwise assign a new one.
+        assignToNewGroupAndIncrement(currentBlob, currentGroup, groupCount);
+    }
+}
+
+function assignToNewGroupAndIncrement(currentBlob, currentGroup, groupCount) {
+    currentBlob.poppingGroup = currentGroup;
+    groupCount[currentBlob.poppingGroup] = 1;
+    currentGroup++;
 }
 
 function markForPoppingGameState (gameState) {
