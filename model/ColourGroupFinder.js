@@ -20,11 +20,10 @@ function markForPopping (blobArray) {
                 const hasBlobAbove = y > 1 && blobGrid.GetBlob(x, y-1).hasBlob;
                 //is there a blob to the left?
                 if (hasBlobToLeft || hasBlobAbove) {
-                     
                     const blobUnderScrutiny = hasBlobToLeft ? blobGrid.GetBlob(x - 1, y).blob :  blobGrid.GetBlob(x, y-1).blob;
-                    AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount, currentGroup);
+                    AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount);
                 } else {
-                    assignToNewGroupAndIncrement(currentBlob, currentGroup, groupCount);
+                    assignToNewGroupAndIncrement(currentBlob, groupCount);
                 }
             }
             blobGrid.SetBlob(x,y,oBlob);
@@ -43,24 +42,25 @@ function markForPopping (blobArray) {
         let popOrNot = groupCount[b.poppingGroup] >= 4; //has popping group != 0 and it's popping group has more than 4 total.
         return new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, popOrNot, b.poppingGroup);
     }
-}
 
-function AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount, currentGroup) {
+    function AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount) {
     if (blobUnderScrutiny.colour === currentBlob.colour) {
         //assign current blob's popping group to that of the one under scrutiny.
         currentBlob.poppingGroup = blobUnderScrutiny.poppingGroup;
         groupCount[currentBlob.poppingGroup] = groupCount[currentBlob.poppingGroup] + 1;
     } else {
         //Otherwise assign a new one.
-        assignToNewGroupAndIncrement(currentBlob, currentGroup, groupCount);
+        assignToNewGroupAndIncrement(currentBlob, groupCount);
     }
 }
 
-function assignToNewGroupAndIncrement(currentBlob, currentGroup, groupCount) {
+function assignToNewGroupAndIncrement(currentBlob, groupCount) {
     currentBlob.poppingGroup = currentGroup;
     groupCount[currentBlob.poppingGroup] = 1;
     currentGroup++;
 }
+}
+
 
 function markForPoppingGameState (gameState) {
     console.log("Marking for popping. GameState Before:" + JSON.stringify(gameState));
