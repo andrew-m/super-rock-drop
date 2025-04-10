@@ -16,11 +16,11 @@ function markForPopping (blobArray) {
             let oBlob = blobGrid.GetBlob(x,y);
             if (oBlob.hasBlob){
                 let currentBlob = oBlob.blob;
-                const hasBlobToLeft = x > 1 && blobGrid.GetBlob(x - 1, y).hasBlob;
+                const hasBlobOfSameColourToLeft = x > 1 && blobGrid.GetBlob(x - 1, y).hasBlob && blobGrid.GetBlob(x - 1, y).blob.colour === currentBlob.colour;
                 const hasBlobAbove = y > 1 && blobGrid.GetBlob(x, y-1).hasBlob;
                 //is there a blob to the left?
-                if (hasBlobToLeft || hasBlobAbove) {
-                    const blobUnderScrutiny = hasBlobToLeft ? blobGrid.GetBlob(x - 1, y).blob :  blobGrid.GetBlob(x, y-1).blob;
+                if (hasBlobOfSameColourToLeft || hasBlobAbove) {
+                    const blobUnderScrutiny = hasBlobOfSameColourToLeft ? blobGrid.GetBlob(x - 1, y).blob :  blobGrid.GetBlob(x, y-1).blob;
                     AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount);
                 } else {
                     assignToNewGroupAndIncrement(currentBlob, groupCount);
@@ -44,15 +44,15 @@ function markForPopping (blobArray) {
     }
 
     function AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount) {
-    if (blobUnderScrutiny.colour === currentBlob.colour) {
-        //assign current blob's popping group to that of the one under scrutiny.
-        currentBlob.poppingGroup = blobUnderScrutiny.poppingGroup;
-        groupCount[currentBlob.poppingGroup] = groupCount[currentBlob.poppingGroup] + 1;
-    } else {
-        //Otherwise assign a new one.
-        assignToNewGroupAndIncrement(currentBlob, groupCount);
+        if (blobUnderScrutiny.colour === currentBlob.colour) {
+            //assign current blob's popping group to that of the one under scrutiny.
+            currentBlob.poppingGroup = blobUnderScrutiny.poppingGroup;
+            groupCount[currentBlob.poppingGroup] = groupCount[currentBlob.poppingGroup] + 1;
+        } else {
+            //Otherwise assign a new one.
+            assignToNewGroupAndIncrement(currentBlob, groupCount);
+        }
     }
-}
 
 function assignToNewGroupAndIncrement(currentBlob, groupCount) {
     currentBlob.poppingGroup = currentGroup;
