@@ -88,4 +88,21 @@ describe('Same coloured blobs in groups of 4 should pop', function () {
         expect(resultBlobs[6].needsPopping).to.equal(true)
         expect(resultBlobs[7].needsPopping).to.equal(true)
     })
+
+    it('Should match l-shaped group of same colours along and up at the right', function () {
+        //will this be the one that drives out a proper search?
+        let blobArray = [
+            //x y is from a top left corner origin. 6, 12 is bottom right.
+            new Blob(1, 12, 1),
+            new Blob(2, 12, 1),
+            new Blob(3, 12, 1),
+            new Blob(3, 11, 1),
+        ]
+        let resultBlobs = markForPopping(blobArray)
+        console.log(JSON.stringify(resultBlobs));
+        expect(resultBlobs[0].needsPopping).to.equal(true)
+        expect(resultBlobs[1].needsPopping).to.equal(true)
+        expect(resultBlobs[2].needsPopping).to.equal(true)
+        expect(resultBlobs[3].needsPopping).to.equal(true)
+    })
 });

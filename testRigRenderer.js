@@ -57,26 +57,63 @@ const setup = function (doc) {
     // ];
 
     // let newBlobArray = [ //vertical group with diff coloured blobs to left.
-    //         new Blob(1, 9, 2),
-    //         new Blob(1, 10, 3),
-    //         new Blob(1, 11, 4),
-    //         new Blob(1, 12, 5),
-    //         new Blob(2, 9, 1),
-    //         new Blob(2, 10, 1),
-    //         new Blob(2, 11, 1),
-    //         new Blob(2, 12, 1)
+    //         new Blob(2, 9, 2),
+    //         new Blob(2, 10, 3),
+    //         new Blob(2, 11, 4),
+    //         new Blob(2, 12, 5),
+    //         new Blob(1, 9, 1),
+    //         new Blob(1, 10, 1),
+    //         new Blob(1, 11, 1),
+    //         new Blob(1, 12, 1)
     // ]
 
-    let newBlobArray = [
-            new Blob(1, 11, 2),
-            new Blob(2, 11, 3),
-            new Blob(3, 11, 4),
-            new Blob(4, 11, 5),
-            new Blob(1, 12, 1),
-            new Blob(2, 12, 1),
-            new Blob(3, 12, 1),
-            new Blob(4, 12, 1)
+    // let newBlobArray = [
+    //         new Blob(1, 11, 2),
+    //         new Blob(2, 11, 3),
+    //         new Blob(3, 11, 4),
+    //         new Blob(4, 11, 5),
+    //         new Blob(1, 12, 1),
+    //         new Blob(2, 12, 1),
+    //         new Blob(3, 12, 1),
+    //         new Blob(4, 12, 1)
+    // ]
+
+
+    // let newBlobArray = [ //Square group
+    //     new Blob(1, 11, 1),
+    //     new Blob(2, 11, 1),
+    //     new Blob(1, 12, 1),
+    //     new Blob(2, 12, 1),
+    // ]
+
+
+    let newBlobArray = [ //L shapes group - this one fails!
+        new Blob(1, 12, 1),
+        new Blob(2, 12, 1),
+        new Blob(3, 12, 1),
+        new Blob(3, 11, 1),
     ]
+
+    // let newBlobArray = [ //L shapes group - this one is OK!
+    //     new Blob(1, 11, 1),
+    //     new Blob(1, 12, 1),
+    //     new Blob(2, 12, 1),
+    //     new Blob(3, 12, 1),
+    // ]
+
+    // let newBlobArray = [ //L shapes group - this one is OK!
+    //     new Blob(1, 11, 1),
+    //     new Blob(2, 11, 1),
+    //     new Blob(3, 11, 1),
+    //     new Blob(3, 12, 1),
+    // ]
+
+    // let newBlobArray = [ //L shapes group - this one is OK
+    //     new Blob(1, 11, 1),
+    //     new Blob(2, 11, 1),
+    //     new Blob(3, 11, 1),
+    //     new Blob(1, 12, 1),
+    // ]
 
     gameState = new GameState(newBlobArray, true)
     gameState = primeNextColour(gameState)

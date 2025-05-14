@@ -8,6 +8,7 @@ function markForPopping (blobArray) {
     let currentGroup = 1;
     let groupCount = [];
     groupCount[0] = 0; //no group 0, but I don't want an undefined element?
+    let groupsToMerge = [];
     for (let y = 1; y <= 12; y++) {
         //foreach row going down.
         //left to right, assign blobs a colour group. If same as left or above, same group.
@@ -16,11 +17,17 @@ function markForPopping (blobArray) {
             let oBlob = blobGrid.GetBlob(x,y);
             if (oBlob.hasBlob){
                 let currentBlob = oBlob.blob;
-                const hasBlobOfSameColourToLeft = x > 1 && blobGrid.GetBlob(x - 1, y).hasBlob && blobGrid.GetBlob(x - 1, y).blob.colour === currentBlob.colour;
-                const hasBlobAbove = y > 1 && blobGrid.GetBlob(x, y-1).hasBlob;
+                const hasBlobOfSameColourToLeft = x > 1 && blobGrid.GetBlob(x-1, y).hasBlob && blobGrid.GetBlob(x-1, y).blob.colour === currentBlob.colour;
+                const hasBlobAboveOfSameColour = y > 1 && blobGrid.GetBlob(x, y-1).hasBlob && blobGrid.GetBlob(x, y-1).blob.colour === currentBlob.colour;
                 //is there a blob to the left?
-                if (hasBlobOfSameColourToLeft || hasBlobAbove) {
-                    const blobUnderScrutiny = hasBlobOfSameColourToLeft ? blobGrid.GetBlob(x - 1, y).blob :  blobGrid.GetBlob(x, y-1).blob;
+                if (hasBlobOfSameColourToLeft || hasBlobAboveOfSameColour) {
+                    if (hasBlobOfSameColourToLeft && hasBlobAboveOfSameColour){
+                        //force the "above" group to adopt the number of the "left" group. Ugh and refactor all this away once green.
+                        let aboveBlobGroup = blobGrid.GetBlob(x, y-1).blob.poppingGroup;
+                        let leftBlobGroup = blobGrid.GetBlob(x-1, y).blob.poppingGroup;
+                        groupsToMerge.push({a:aboveBlobGroup, l:leftBlobGroup});
+                    }
+                    const blobUnderScrutiny = hasBlobOfSameColourToLeft ? blobGrid.GetBlob(x -1, y).blob :  blobGrid.GetBlob(x, y-1).blob;
                     AdoptPoppingGroupIfColourMatches(blobUnderScrutiny, currentBlob, groupCount);
                 } else {
                     assignToNewGroupAndIncrement(currentBlob, groupCount);
@@ -30,8 +37,23 @@ function markForPopping (blobArray) {
             //todo assign oblob back into the BlobGrid
         }
     }
-    //if any group has more than 4, mark for popping.
+    //merge groups marked for merging.
 
+
+    //world's shortest javascript arrays-can-be-queues tutorial!
+    //x.push(thing)
+    //thing = x.shift()
+    //x.length
+    //^^ covers everything you need to know!
+    while (groupsToMerge.length > 0) {
+        let mergeMe = groupsToMerge.shift();
+        let above = mergeMe.a;
+        let left = mergeMe.l;
+        
+        blobArray = blobArray.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, b.popOrNot, b.poppingGroup == above ? left : b.poppingGroup ));
+    }
+    //if any group has more than 4, mark for popping.
+    
     // var popOrNot = blobArray.filter(b => b.colour == 1).length >=4;
 
     let nb = blobArray.map(b => newBlobWithPopSetCorrectly(b));
@@ -39,7 +61,8 @@ function markForPopping (blobArray) {
     return nb;
 
     function newBlobWithPopSetCorrectly(b) {
-        let popOrNot = groupCount[b.poppingGroup] >= 4; //has popping group != 0 and it's popping group has more than 4 total.
+        let bsGroupHasThisManyMembers = blobArray.filter(cb => cb.poppingGroup === b.poppingGroup).length;
+        let popOrNot = bsGroupHasThisManyMembers >= 4; //has popping group != 0 and it's popping group has more than 4 total.
         return new Blob(b.x, b.y, b.colour, b.isPlayerControlled, b.x, b.y, popOrNot, b.poppingGroup);
     }
 
@@ -54,11 +77,11 @@ function markForPopping (blobArray) {
         }
     }
 
-function assignToNewGroupAndIncrement(currentBlob, groupCount) {
-    currentBlob.poppingGroup = currentGroup;
-    groupCount[currentBlob.poppingGroup] = 1;
-    currentGroup++;
-}
+    function assignToNewGroupAndIncrement(currentBlob, groupCount) {
+        currentBlob.poppingGroup = currentGroup;
+        groupCount[currentBlob.poppingGroup] = 1;
+        currentGroup++;
+    }
 }
 
 
