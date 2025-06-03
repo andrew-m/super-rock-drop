@@ -2,6 +2,7 @@
 import {GameState} from '../model/GameState.js';
 import {Blob} from '../model/Blob.js';
 import {hasNonPCBlobDirectlyBelow, getOtherPlayerControlledBlob, hasNonPCBlobDirectlyRight, hasNonPCBlobDirectlyLeft} from '../model/GameStateQueries.js';
+import { markForPopping } from './ColourGroupFinder.js';
 
 function keyLeft(gameState) {
     return ifPlayerControlled(moveLeftIfNotAtEdge, gameState)
@@ -27,9 +28,9 @@ function keyRotate(gameState) {
     return newGameState
 }
 
-function spawnPlayerControlledBlobsIfNoPCBlobs(gameState) {
+function spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping(gameState) {
     let newBlobArray = gameState.Blobs;
-    if (! gameState.Blobs.some(b => b.isPlayerControlled === true)) {
+    if (! gameState.Blobs.some(b => b.isPlayerControlled === true) && ! gameState.Blobs.some(b => b.needsPopping === true)) {
         //Immutable equivalent of array.push
         newBlobArray = [...gameState.Blobs,
             new Blob(3, 1, gameState.nextColours[0], true),
@@ -206,7 +207,12 @@ function isAtBottom(blob) {
 }
 
 function animationComplete(gameState) {
-    let newGameState = spawnPlayerControlledBlobsIfNoPCBlobs(gameState);
+    //todo Before spawning player controlled blobs
+    //we should check and pop any blobs that should pop
+    //Ideally we should then continue animating falling
+    //If, and only if, there's nothing left to pop, and nothing left to fall, we should spawn new player blobs.
+    
+    let newGameState = spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping(gameState);
     let blobsWithoutOldPositions = newGameState.Blobs.map(b => new Blob(b.x, b.y, b.colour, b.isPlayerControlled));
 
     let gameState1 = new GameState(
@@ -226,7 +232,7 @@ export {
     keyRotate,
     animationComplete, //animation engine, renderer, testRigRenderer and tests.
 //***********************************/
-    spawnPlayerControlledBlobsIfNoPCBlobs, // tests only
+    spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping, // tests only
     moveBlobsThatShouldFallToRestingPosition, //tests only
     whereShouldIBeOnRotate, //tests only
     pcBlobHasCrashedIntoOtherBlob //tests only

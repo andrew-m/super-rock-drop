@@ -1,6 +1,6 @@
 import 'mocha';
 import {expect} from 'chai';
-import {spawnPlayerControlledBlobsIfNoPCBlobs,
+import {spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping,
     keyLeft,
     keyRight,
     keyDown,
@@ -469,7 +469,7 @@ describe('Spawn new player controlled blobs', function () {
         let blobArray = [] //noblobs
         let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
 
-        let newGameState = spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newGameState = spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping(gameState)
         let newBlobArray = newGameState.Blobs
         expect(newBlobArray.length).to.equal(2)
 
@@ -485,7 +485,7 @@ describe('Spawn new player controlled blobs', function () {
         let blobArray = [] //noblobs
         let gameState = new GameState(blobArray, false, [0, 3])
 
-        let newGameState = spawnPlayerControlledBlobsIfNoPCBlobs(gameState)
+        let newGameState = spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping(gameState)
 
         expect(newGameState.Blobs.length).to.equal(2)
 
@@ -500,7 +500,7 @@ describe('Spawn new player controlled blobs', function () {
         ]
         let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
 
-        let newBlobArray = spawnPlayerControlledBlobsIfNoPCBlobs(gameState).Blobs
+        let newBlobArray = spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping(gameState).Blobs
 
         expect(newBlobArray.length).to.equal(2)
 
@@ -511,6 +511,29 @@ describe('Spawn new player controlled blobs', function () {
         expect(newBlobArray[1].y).to.equal(10)
         expect(newBlobArray[1].isPlayerControlled).to.equal(true)
     })
+
+
+    it('Should not populate with PC blobs if existing blobs marked for popping', function () {
+        let blobArray = [
+            new Blob(4, 9, "#FFAAAA", false, 4, 9, true, 1),
+            new Blob(4, 10, "#FFAAAA", false, 4, 10, true, 1) //not strictly valid, but that's no concern of this function!
+        ]
+        let gameState = new GameState(blobArray, false, ["#ff0000", "00FF00"])
+
+        let newBlobArray = spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping(gameState).Blobs
+
+        expect(newBlobArray.length).to.equal(2)
+
+        expect(newBlobArray[0].x).to.equal(4)
+        expect(newBlobArray[0].y).to.equal(9)
+        expect(newBlobArray[0].isPlayerControlled).to.equal(false)
+        expect(newBlobArray[0].needsPopping).to.equal(true)
+        expect(newBlobArray[1].x).to.equal(4)
+        expect(newBlobArray[1].y).to.equal(10)
+        expect(newBlobArray[1].isPlayerControlled).to.equal(false)
+        expect(newBlobArray[1].needsPopping).to.equal(true)
+    })
+    //spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping
 })
 
 describe('Where should I be blob intended position calculator', function () {

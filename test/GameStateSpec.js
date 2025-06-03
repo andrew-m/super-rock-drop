@@ -1,7 +1,7 @@
 import 'mocha';
 import {expect} from 'chai';
 import {
-    spawnPlayerControlledBlobsIfNoPCBlobs,
+    spawnPlayerControlledBlobsIfNoPCBlobsOrBlobsMarkedForPopping,
     keyLeft,
     keyRight,
     keyDown,

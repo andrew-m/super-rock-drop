@@ -43,4 +43,16 @@ describe('Blob grid Constructor and get Array', function () {
         expect(expectedBlob1.blob).to.equal(blobArray[0]);
         expect(expectedBlob2.blob).to.equal(blobArray[1]);
     })
+
+    // it('Should apply a function to all blobs in the grid or array', function(){
+    //     //x, y, colour = 1, isPlayerControlled = false, oldx = x, oldy = y, needsPopping = false, poppingGroup = 0
+    //     let blob1 = new Blob(1, 10, 1, false, 1, 10, false, 3);
+    //     let blob2 = new Blob(2, 5, 1, false, 2, 5, false, 1);
+        
+    //     var blobArray = [blob1,blob2];
+    //     var grid = new BlobGrid(blobArray);
+
+    //     grid.Apply
+    // })
+    //why not just get the array - map it - and create a new grid?
 })

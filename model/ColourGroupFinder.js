@@ -39,12 +39,6 @@ function markForPopping (blobArray) {
     }
     //merge groups marked for merging.
 
-
-    //world's shortest javascript arrays-can-be-queues tutorial!
-    //x.push(thing)
-    //thing = x.shift()
-    //x.length
-    //^^ covers everything you need to know!
     while (groupsToMerge.length > 0) {
         let mergeMe = groupsToMerge.shift();
         let above = mergeMe.a;
@@ -115,19 +109,11 @@ function arrayIsQueue () {
     console.log(i); // 2
 }
 
-//js sets
-//add and check methods
-
-function playWithSets() {
-    var s = Set();
-    s.add(2);
-    s.add(3);
-    s.has(2); //true
-    s.has(4); //false
-    s.delete(2);
-    s.has(2); //false
-}
-
+//world's shortest javascript arrays-can-be-queues tutorial!
+//x.push(thing)
+//thing = x.shift()
+//x.length
+//^^ covers everything you need to know!
 
 //pseudo Python code
 /**
